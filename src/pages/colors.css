@@ -1,0 +1,20 @@
+  :root {
+    /*main*/
+    --black: #1e1e1e;
+    --dark: #8d8d8d;
+    --gray: #999999;
+    --light-gray: #f8f8f8;
+    --extra-light-gray: #efefef;
+    --light-gray-second: #fbfbfb;
+    --light: #f2f2f2;
+    --white: #ffffff;
+    /*additional*/
+    --blue: #3369f3;
+    --light-blue: #e4edfd;
+    --cold-light: #83b3d3;
+    --cold-dark: #68a2ca;
+    /*status*/
+    --error: #ff2f2f;
+    /*icons*/
+    --icon-color: #3369f3;
+  }
