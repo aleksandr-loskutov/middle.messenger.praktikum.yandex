@@ -1,9 +1,8 @@
-@import "colors.css";
-@import "fonts.css";
-@import "reset.css";
+@import "colors.scss";
+@import "fonts.scss";
+@import "reset.scss";
 
-/*main*/
-/*Typography*/
+/*Common*/
 h1,
 h2,
 h3,
@@ -30,10 +29,12 @@ p {
   line-height: 1.618rem;
   color: var(--dark);
 }
+
 strong {
   font-weight: 700;
   color: var(--black);
 }
+
 html {
   height: 100%;
 }
@@ -55,6 +56,17 @@ body {
   justify-content: center;
 }
 
+.relative {
+  position: relative;
+}
+
+.hidden {
+  display: none;
+}
+
+/* end common */
+
+//login page
 .login-box {
   width: 100%;
   max-width: 340px;
@@ -76,7 +88,7 @@ body {
 .register-form__fields-block {
   margin-bottom: 60px;
 }
-.login-form__label {
+.form__label {
   display: block;
   font-size: 10px;
   line-height: 10px;
@@ -96,8 +108,6 @@ body {
   color: var(--black);
   background-color: var(--white);
   transition: all 0.3s ease-in-out;
-}
-.login-form__input {
   margin-bottom: 16px;
 }
 
@@ -109,24 +119,6 @@ body {
   color: var(--error);
   margin-top: -15px;
   margin-bottom: 5px;
-}
-
-.hidden {
-  display: none;
-}
-
-.button {
-  width: 100%;
-  height: 37px;
-  background: var(--blue);
-  border: 0;
-  border-radius: 8px;
-  color: var(--white);
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 13px;
-  cursor: pointer;
-  transition: background 0.2s;
 }
 
 .login-form__link {
@@ -170,7 +162,7 @@ body {
   margin-bottom: 20px;
 }
 
-/*chats*/
+/*sidebar chat*/
 .main-chat {
   width: 100%;
   height: 100vh;
@@ -264,14 +256,15 @@ body {
   font-weight: 600;
   color: var(--black);
   grid-area: name;
-  /*margin-bottom: 4px;*/
 }
+
 .chat-item__message-time {
   color: var(--gray);
   font-size: 9px;
   line-height: 13px;
   grid-area: date;
 }
+
 .chat-item__avatar {
   width: 47px;
   height: 47px;
@@ -290,6 +283,7 @@ body {
   max-height: 30px;
   overflow: hidden;
 }
+
 .chat-item__message-status {
   display: block;
   font-size: 11px;
@@ -305,7 +299,9 @@ body {
   border-radius: 50%;
   grid-area: status;
 }
+//end of sidebar chat
 
+//chat window
 .chat-container__placeholder {
   color: var(--gray);
   font-size: 12px;
@@ -324,10 +320,6 @@ body {
 .chat-userbar__wrapper {
   display: flex;
   align-items: center;
-}
-
-.relative {
-  position: relative;
 }
 
 .chat-options {
@@ -439,15 +431,21 @@ body {
 
 .chat-message__image-wrapper {
   display: flex;
+  position: relative;
   width: fit-content;
   align-items: flex-end;
 }
 
 .action-bar {
   width: 100%;
-  padding: 11px 20px;
   display: flex;
+  padding: 11px 20px;
   border-top: 1px solid var(--light-gray);
+  column-gap: 10px;
+}
+.action-bar__form {
+  width: 100%;
+  display: flex;
   column-gap: 10px;
 }
 
@@ -484,66 +482,15 @@ body {
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.14);
 }
 
-/* Modal */
-.modal {
-  display: none;
+//component backbutton
+.sidebar-with-back-btn {
+  min-width: 64px;
+  height: 100%;
   position: fixed;
-  z-index: 1;
-  left: 0;
   top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
-}
-.modal__wrapper {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-content {
-  display: inline-block;
-  background-color: white;
-  padding: 40px 30px;
-  border: 1px solid transparent;
-  border-radius: 12px;
-  min-width: 350px;
-}
-
-.modal-form__label {
-  display: block;
-  font-size: 10px;
-  line-height: 10px;
-  font-weight: 500;
-  color: var(--dark);
-  margin-bottom: 8px;
-}
-
-.modal-form__input {
-  margin-bottom: 33px;
-}
-
-.modal-form__input-error {
-  display: block;
-  font-size: 10px;
-  line-height: 10px;
-  font-weight: 600;
-  color: var(--error);
-  margin-top: -15px;
-  margin-bottom: 5px;
-}
-
-.modal-content__title {
-  font-size: 15px;
-  line-height: 20px;
-  text-transform: none;
-  font-weight: 500;
-  text-align: center;
-  margin-bottom: 50px;
-  color: var(--black);
+  left: 0;
+  background-color: var(--light-gray-second);
+  z-index: 1;
 }
 
 /*profile*/
@@ -554,6 +501,7 @@ body {
   align-items: center;
   justify-content: center;
 }
+
 .profile-data__avatar-input {
   width: 100%;
   height: 130px;
@@ -563,15 +511,6 @@ body {
   justify-content: center;
   align-items: center;
   cursor: pointer;
-}
-.sidebar-with-back-btn {
-  min-width: 64px;
-  height: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  background-color: var(--light-gray-second);
-  z-index: 1;
 }
 
 .profile-data {
@@ -719,6 +658,7 @@ body {
   font-weight: 500;
   margin-bottom: 15px;
 }
+
 .profile-data__exit-button:hover,
 .profile-data__exit-button:focus {
   color: var(--blue);

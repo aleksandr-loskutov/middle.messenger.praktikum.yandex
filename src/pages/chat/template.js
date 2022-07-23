@@ -1,44 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
-    />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link rel="stylesheet" href="./style.css" />
-    <title>Login</title>
-  </head>
-  <body>
+export default `
     <main class="main-chat">
       <div class="sidebar">
-        <a href="#" class="sidebar__profile-link">Профиль &nbsp;></a>
-        <input type="text" class="sidebar__search-input" placeholder="Поиск" />
+        <a href="/profile" class="sidebar__profile-link">Профиль &nbsp;></a>
+         {{> input name="search" placeholder="Поиск" type="text" id="search" class="sidebar__search-input" value=""}}
         <ul class="sidebar__chat-list">
-          <li class="sidebar__chat-item chat-active">
-            <svg
-              class="chat-item__avatar"
-              width="47"
-              height="47"
-              viewBox="0 0 47 47"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <circle cx="23.5" cy="23.5" r="23.5" fill="#EFEFEF" />
-            </svg>
-            <span class="chat-item__chat-name">Андрей</span>
-            <span class="chat-item__message-time">12:00</span>
-            <span class="chat-item__message-text">Привет </span>
-            <span class="chat-item__message-status">2</span>
-          </li>
+                {{#each chats}}
+                    {{> chat}}
+                {{/each}}
         </ul>
       </div>
       <div class="chat-container">
+      {{#if currentChat}}
         <div class="chat-window">
           <div class="chat-userbar">
             <div class="chat-userbar__wrapper">
-              <svg
+            {{#if currentChat.chatAvatar}}
+            <img src="{{currentChat.chatAvatar}}" class="chat-userbar__avatar" width="34" height="34"/>
+            {{else}}
+                <svg
                 class="chat-userbar__avatar"
                 width="34"
                 height="34"
@@ -47,8 +26,10 @@
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <circle cx="17" cy="17" r="17" fill="#EFEFEF" />
-              </svg>
-              <span class="chat-userbar__text">Андрей</span>
+              </svg>          
+            {{/if}}
+
+              <span class="chat-userbar__text">{{currentChat.chatName}}</span>
             </div>
             <div class="chat-userbar__info relative">
               <button
@@ -159,35 +140,9 @@
           </div>
           <div class="chat-messages">
             <div class="chat-messages__wrapper">
-              <div class="chat-message message-received">
-                <span class="chat-message__text"
-                  >Привет! Смотри, тут всплыл интересный кусок лунной
-                  космической истории — НАСА в какой-то момент попросила
-                  Хассельблад адаптировать модель SWC для полетов на Луну.
-                  Сейчас мы все знаем что астронавты летали с моделью 500 EL — и
-                  к слову говоря, все тушки этих камер все еще находятся на
-                  поверхности Луны, так как астронавты с собой забрали только
-                  кассеты с пленкой. Хассельблад в итоге адаптировал SWC для
-                  космоса, но что-то пошло не так и на ракету они так никогда и
-                  не попали. Всего их было произведено 25 штук, одну из них
-                  недавно продали на аукционе за 45000 евро.</span
-                ><span class="chat-message__received-date"> 18:00 </span>
-              </div>
-              <div class="chat-message image-received">
-                <div class="chat-message__image-wrapper relative">
-                  <img
-                    src="/static/sent-photo.jpg"
-                    class="chat-message__image"
-                  /><span class="chat-message__received-image-date">
-                    18:00
-                  </span>
-                </div>
-              </div>
-              <div class="chat-message message-sent">
-                <span class="chat-message__text">Круто!</span>
-                <span class="chat-message__status">✔</span>
-                <span class="chat-message__date"> 18:00 </span>
-              </div>
+            {{#each currentChat.messages}}
+                {{> message}}
+            {{/each}}
             </div>
           </div>
           <div class="action-bar">
@@ -313,6 +268,7 @@
                 </ul>
               </div>
             </div>
+            <form class="action-bar__form">
             <div class="action-bar__textarea">
               <textarea
                 class="action-bar__textarea-input"
@@ -320,7 +276,7 @@
               ></textarea>
             </div>
             <div class="action-bar__send">
-              <button class="action-bar__send-button">
+              <button class="action-bar__send-button" type="submit">
                 <svg
                   width="28"
                   height="28"
@@ -338,81 +294,16 @@
                 </svg>
               </button>
             </div>
+            </form>
           </div>
         </div>
+        {{else}}
+                <span class="chat-container__placeholder"
+          >Выберите чат чтобы отправить сообщение</span
+        >
+         {{/if}}
       </div>
     </main>
-    <div id="modal-add-user" class="modal">
-      <div class="modal__wrapper">
-        <div class="modal-content">
-          <h2 class="modal-content__title">Добавить пользователя</h2>
-          <form class="modal-content__form">
-            <div class="modal-form__fields-block">
-              <label class="modal-form__label" for="add-user-name">
-                Логин
-              </label>
-              <input
-                class="modal-form__input form-input"
-                type="text"
-                id="add-user-name"
-                name="add-user-name"
-                placeholder="ivan"
-              />
-              <button class="modal-form__button button" type="submit">
-                Добавить
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-    <div id="modal-delete-user" class="modal">
-      <div class="modal__wrapper">
-        <div class="modal-content">
-          <h2 class="modal-content__title">Удалить пользователя</h2>
-          <form class="modal-content__form">
-            <div class="modal-form__fields-block">
-              <label class="modal-form__label" for="delete-user"> Логин </label>
-              <input
-                class="modal-form__input form-input"
-                type="text"
-                id="delete-user"
-                name="delete-user"
-                placeholder="ivan"
-              />
-              <button class="modal-form__button button" type="submit">
-                Удалить
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-    <script>
-      function toggleOptionsWindow() {
-        document.getElementById("chat-options").classList.toggle("hidden");
-        document
-          .getElementById("chat-options-button")
-          .classList.toggle("options-button-active");
-      }
-      function toggleAttachWindow() {
-        document.getElementById("attach-options").classList.toggle("hidden");
-      }
-      const modal = document.getElementById("modal-add-user");
-      const modalDeleteUser = document.getElementById("modal-delete-user");
-      const modalWrapper = document.querySelector(".modal__wrapper");
-      function addUserModal() {
-        modal.style.display = "block";
-      }
-      function deleteUserModal() {
-        modalDeleteUser.style.display = "block";
-      }
-      window.onclick = function (event) {
-        if (event.target.classList.contains("modal__wrapper")) {
-          modal.style.display = "none";
-          modalDeleteUser.style.display = "none";
-        }
-      };
-    </script>
-  </body>
-</html>
+     {{> modal id="modal-add-user" title="Добавить пользователя" inputId="add-user-name" type="text" placeholder="ivan" value="" buttonText="Добавить"}}
+     {{> modal id="modal-delete-user" title="Удалить пользователя" inputId="delete-user" type="text" placeholder="ivan" value="" buttonText="Удалить"}}
+`;
