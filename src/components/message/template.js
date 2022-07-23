@@ -1,4 +1,4 @@
-// import "./message.scss";
+import "./message.scss";
 export default `
   <div class="chat-message {{#if isText}}message{{else}}image{{/if}}-{{#if owner}}sent{{else}}received{{/if}}">
   {{#if messageText}}

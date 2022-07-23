@@ -33,14 +33,14 @@ export default `
       <form class="profile-data__form">
         <div class="profile-data__avatar-container">
           <div class="personal-image">
-            <input type="file" id="user-avatar" />
+          {{> input name="avatar" type="file" id="avatar" class=" "}}
             <figure class="personal-figure">
               <img
                 src="https://avatars1.githubusercontent.com/u/11435231?s=460&v=4"
                 class="personal-avatar"
                 alt="avatar."
               />
-              <figcaption class="personal-figcaption" id="avatar">
+              <figcaption class="personal-figcaption" id="user-avatar">
                 <img
                   alt="avatar placeholder."
                   id="avatar-placeholder"
@@ -58,11 +58,11 @@ export default `
         </div>
         <div class="profile-data__info-container">
          {{> profileInput name="email" type="email" id="email" label="Почта" placeholder="test@test.ru"}}
-          {{> profileInput name="login" type="text" id="login" label="Логин" placeholder="mylogin"}}
-          {{> profileInput name="first_name" type="text" id="first_name" label="Имя" placeholder="Aleksandr"}}
-           {{> profileInput name="second_name" type="text" id="second_name" label="Фамилия" placeholder="Lastname"}}
-            {{> profileInput name="display_name" id="display_name" label="Имя в чате" placeholder="Icanhazchatname"}}
-            {{> profileInput name="phone" id="phone" label="Телефон" placeholder="+799999999"}}
+         {{> profileInput name="login" type="text" id="login" label="Логин" placeholder="mylogin"}}
+         {{> profileInput name="first_name" type="text" id="first_name" label="Имя" placeholder="Aleksandr"}}
+         {{> profileInput name="second_name" type="text" id="second_name" label="Фамилия" placeholder="Lastname"}}
+         {{> profileInput name="display_name" id="display_name" label="Имя в чате" placeholder="Icanhazchatname"}}
+         {{> profileInput name="phone" id="phone" label="Телефон" placeholder="+799999999"}}
           <div class="profile-data__divider">
             <h2 class="profile-data__title">Смена пароля</h2>
           </div>

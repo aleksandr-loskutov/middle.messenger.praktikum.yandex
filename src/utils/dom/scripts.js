@@ -28,8 +28,8 @@ window.onclick = function (event) {
   }
   // profile page
   if (window.location.pathname === "/profile") {
-    const personalImage = document.getElementById("avatar");
-    const input = document.getElementById("user-avatar");
+    const personalImage = document.getElementById("user-avatar");
+    const input = document.getElementById("avatar");
     personalImage.addEventListener("click", () => {
       input.click();
     });
