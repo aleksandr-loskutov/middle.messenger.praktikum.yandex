@@ -1,5 +1,6 @@
 ## WEB-MESSENGER
 ![Build status](https://github.com/aleksandr-loskutov/middle.messenger.praktikum.yandex/actions/workflows/docker-deploy.yml/badge.svg)
+
 Приложение веб-чат с возможностью регистрации и переписки.
 Доступно [по ссылке](http://aleksandrl.ru:1501/chat).
 
