@@ -271,6 +271,8 @@ export default `
             <form class="action-bar__form">
             <div class="action-bar__textarea">
               <textarea
+                name="message"
+                id="message"
                 class="action-bar__textarea-input"
                 placeholder="Сообщение..."
               ></textarea>
