@@ -18,7 +18,7 @@ const chats = [
     messageText: "Hello lorem ipsum dolor sit amet",
     messageTime: "11:00",
     isChatActive: true,
-    chatUnreadMessages: 3,
+    chatUnreadMessages: 3
   },
   {
     chatName: "Bob",
@@ -27,8 +27,8 @@ const chats = [
     messageText: "Hi, how are you?",
     messageTime: "19:13",
     isChatActive: false,
-    chatUnreadMessages: 0,
-  },
+    chatUnreadMessages: 0
+  }
 ];
 
 const currentChat = {
@@ -42,7 +42,7 @@ const currentChat = {
       isText: true,
       owner: true,
       isSent: true,
-      isViewed: true,
+      isViewed: true
     },
     {
       id: 2,
@@ -51,7 +51,7 @@ const currentChat = {
       isText: true,
       owner: false,
       isSent: true,
-      isViewed: false,
+      isViewed: false
     },
     {
       id: 3,
@@ -60,23 +60,23 @@ const currentChat = {
       owner: true,
       isText: true,
       isSent: true,
-      isViewed: false,
+      isViewed: false
     },
     {
       id: 4,
       messageText: `Хочу взять себе такой.`,
       messageTime: "13:50",
       owner: false,
-      isText: true,
+      isText: true
     },
     {
       id: 5,
       image: `https://icdn.lenta.ru/images/2014/03/24/18/20140324182611102/pic_4fcc1b7a6ba0b0c545c1245d66373735.jpg`,
       messageTime: "13:50",
       owner: false,
-      isText: false,
-    },
-  ],
+      isText: false
+    }
+  ]
 };
 //image type
 export default ChatPage({ chats, currentChat });
