@@ -10,7 +10,7 @@ export default `<main class="main-auth">
       </div>
       <div class="login-form__buttons-block">
         {{> button type="submit" text="Вход" id="login-button" class="button"}}
-        <a href="#" class="login-form__link">Нет аккаунта?</a>
+        <a href="/register" class="login-form__link">Нет аккаунта?</a>
       </div>
     </form>
   </div>
