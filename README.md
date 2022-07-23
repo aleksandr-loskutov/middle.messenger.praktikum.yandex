@@ -2,7 +2,7 @@
 
 ![Build status](https://github.com/aleksandr-loskutov/middle.messenger.praktikum.yandex/actions/workflows/docker-deploy.yml/badge.svg)
 
-Приложение веб-чат с возможностью регистрации и переписки.
+Приложение веб-чат с возможностью регистрации и переписки (в разработке).
 Доступно [по ссылке](http://aleksandrl.ru:1501/chat).
 
 Страницы:
