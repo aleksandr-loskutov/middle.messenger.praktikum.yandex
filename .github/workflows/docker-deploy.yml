@@ -1,0 +1,21 @@
+name: Docker-deploy
+on:
+  push:
+    branches: [ sprint_1 ]
+jobs:
+  docker-deploy:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v3
+      - name: set env var for new docker container name
+        run: echo "short_sha=`echo ${{ github.sha }} | cut -c1-8`" >> $GITHUB_ENV
+      - name: set env var for old container id
+        run: echo "running_container_id=`echo $(docker ps --filter name=${{ github.event.repository.name }} -q)`" >> $GITHUB_ENV
+      - name: building container
+        run: docker build -t ${{ github.event.repository.name }}-${{ env.short_sha }} .
+      - name: stopping running container if exist
+        run: docker stop ${{ env.running_container_id }} || true
+      - name: removing old containers that affiliated with this repository name
+        run: docker rmi $(docker images -f reference=${{ github.event.repository.name }}-*  | grep -v "${{ github.event.repository.name }}-${{ env.short_sha }}" | awk 'NR>1 {print $1}') || true
+      - name: starting new container
+        run: docker run -d -p 1501:8080 --name ${{ github.event.repository.name }}-${{ env.short_sha }}  --rm ${{ github.event.repository.name }}-${{ env.short_sha }}
