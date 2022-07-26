@@ -10,7 +10,6 @@ Handlebars.registerPartial("chat", chatTemplate);
 Handlebars.registerPartial("message", messageTemplate);
 Handlebars.registerPartial("modal", modalTemplate);
 
-const ChatPage = Handlebars.compile(chatPageTemplate);
 const chats = [
   {
     chatName: "Alex",
@@ -78,5 +77,6 @@ const currentChat = {
     }
   ]
 };
-//image type
+
+const ChatPage = Handlebars.compile(chatPageTemplate);
 export default ChatPage({ chats, currentChat });

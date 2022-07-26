@@ -10,7 +10,7 @@
   "author": "AleksandrL",
   "license": "ISC",
   "engine": {
-    "node": "16.x"
+    "node": "16.15.0"
   },
   "devDependencies": {
     "@parcel/transformer-sass": "^2.6.2",
