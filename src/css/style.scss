@@ -74,7 +74,7 @@ body {
   padding: 50px 30px 30px 30px;
   background: #fff;
   border-radius: 12px;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.14);
+  box-shadow: 0 0 6px var(--box-shadow);
 }
 
 .login-box__title {
@@ -266,10 +266,6 @@ body {
 }
 
 .chat-item__avatar {
-  width: 47px;
-  height: 47px;
-  border-radius: 50%;
-  margin-right: 10px;
   grid-area: avatar;
 }
 
@@ -309,12 +305,18 @@ body {
   font-weight: 500;
 }
 
-.chat-userbar__avatar {
-  width: 34px;
-  height: 34px;
-  border: 1px solid transparent;
+.avatar {
   border-radius: 50%;
   margin-right: 10px;
+}
+.avatar-min {
+  width: 34px;
+  height: 34px;
+}
+
+.avatar-normal {
+  width: 47px;
+  height: 47px;
 }
 
 .chat-userbar__wrapper {
@@ -331,7 +333,7 @@ body {
   position: absolute;
   border: 1px solid transparent;
   border-radius: 12px;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.14);
+  box-shadow: 0 0 6px var(--box-shadow);
 }
 
 .chat-userbar__options-button {
@@ -420,7 +422,7 @@ body {
   position: absolute;
   border: 1px solid transparent;
   border-radius: 12px;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.14);
+  box-shadow: 0 0 6px var(--box-shadow);
 }
 
 //component backbutton
@@ -563,7 +565,7 @@ body {
   transition: all ease-in-out 0.3s;
 }
 .personal-avatar:hover {
-  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 2px 4px 0px var(--box-shadow);
 }
 .personal-figcaption {
   cursor: pointer;
@@ -578,7 +580,7 @@ body {
 }
 .personal-figcaption:hover {
   opacity: 1;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--box-shadow);
 }
 .personal-figcaption > img {
   margin-top: 35px;
