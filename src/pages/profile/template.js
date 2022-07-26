@@ -42,7 +42,7 @@ export default `
               />
               <figcaption class="personal-figcaption" id="user-avatar">
                 <img
-                  alt="avatar placeholder."
+                  alt="установить avatar."
                   id="avatar-placeholder"
                   src="https://raw.githubusercontent.com/ThiagoLuizNunes/angular-boilerplate/master/src/assets/imgs/camera-white.png"
                 />

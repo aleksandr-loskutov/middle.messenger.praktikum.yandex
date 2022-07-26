@@ -8,7 +8,7 @@ export default `
    {{/if}}
    {{#if image}}
     <div class="chat-message__image-wrapper">
-        <img src="{{image}}" class="chat-message__image"/>
+        <img src="{{image}}" class="chat-message__image" alt="изображение из чата."/>
         <span class="chat-message__received-image-date">{{ messageTime }}</span>
     </div>
     {{/if}}

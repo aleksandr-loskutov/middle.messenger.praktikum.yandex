@@ -15,12 +15,10 @@ export default `
           <div class="chat-userbar">
             <div class="chat-userbar__wrapper">
             {{#if currentChat.chatAvatar}}
-            <img src="{{currentChat.chatAvatar}}" class="chat-userbar__avatar" width="34" height="34"/>
+                <img class="chat-userbar__avatar avatar avatar-min" src="{{currentChat.chatAvatar}}" alt="аватар {{currentChat.chatName}}."/>
             {{else}}
                 <svg
-                class="chat-userbar__avatar"
-                width="34"
-                height="34"
+                class="avatar avatar-normal"
                 viewBox="0 0 34 34"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
