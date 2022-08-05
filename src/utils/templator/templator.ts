@@ -1,5 +1,5 @@
 import Handlebars from "handlebars";
-export default function Templator(template, data) {
+export function Templator(template, data: {} | undefined) {
   return data
     ? Handlebars.compile(template)(data)
     : Handlebars.compile(template);
