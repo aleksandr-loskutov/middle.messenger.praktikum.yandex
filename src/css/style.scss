@@ -88,38 +88,6 @@ body {
 .register-form__fields-block {
   margin-bottom: 60px;
 }
-.form__label {
-  display: block;
-  font-size: 10px;
-  line-height: 10px;
-  font-weight: 500;
-  color: var(--dark);
-  margin-bottom: 8px;
-}
-.form-input {
-  width: 100%;
-  height: 40px;
-  border: 1px solid var(--light-gray);
-  border-radius: 5px;
-  padding: 0 10px;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 40px;
-  color: var(--black);
-  background-color: var(--white);
-  transition: all 0.3s ease-in-out;
-  margin-bottom: 16px;
-}
-
-.login-form__input-error {
-  display: block;
-  font-size: 10px;
-  line-height: 10px;
-  font-weight: 600;
-  color: var(--error);
-  margin-top: -15px;
-  margin-bottom: 5px;
-}
 
 .login-form__link {
   display: block;
@@ -162,7 +130,7 @@ body {
   margin-bottom: 20px;
 }
 
-/*sidebar chat*/
+/*sidebar chat-list*/
 .main-chat {
   width: 100%;
   height: 100vh;
@@ -185,6 +153,7 @@ body {
 }
 
 .sidebar__search-input {
+  width: 100%;
   height: 32px;
   border: 1px solid transparent;
   border-radius: 5px;
@@ -295,9 +264,9 @@ body {
   border-radius: 50%;
   grid-area: status;
 }
-//end of sidebar chat
+//end of sidebar chat-list
 
-//chat window
+//chat-list window
 .chat-container__placeholder {
   color: var(--gray);
   font-size: 12px;
@@ -382,7 +351,7 @@ body {
 .action-bar {
   width: 100%;
   display: flex;
-  padding: 11px 20px;
+  padding: 11px 20px 30px 20px;
   border-top: 1px solid var(--light-gray);
   column-gap: 10px;
 }
@@ -509,6 +478,10 @@ body {
   text-align: right;
 }
 
+.profile-data__input::placeholder {
+  opacity: 0.5;
+}
+
 .profile-data__title {
   font-size: 14px;
   font-weight: 600;
@@ -550,7 +523,7 @@ body {
   height: 130px;
   border-radius: 50%;
   background-color: var(--extra-light-gray);
-  background-image: url("/static/img/avatar-placeholder.svg");
+  background-image: url("../../static/img/avatar-placeholder.svg");
   background-repeat: no-repeat;
   background-position: center;
 }
