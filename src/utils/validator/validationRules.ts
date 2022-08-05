@@ -1,7 +1,7 @@
 export const loginRule = {
   login: {
     isRequired: {
-      message: "Электронная почта обязательна для заполнения"
+      message: "Логин обязателен для заполнения"
     },
     isLogin: {
       message: "Некорректный логин"
@@ -61,6 +61,22 @@ export const phoneRule = {
     }
   }
 };
+export const firstNameRule = {
+  first_name: {
+    isName: {
+      message:
+        "Некорректное имя: латиница или кириллица, первая буква должна быть заглавной, без пробелов и без цифр, нет спецсимволов (допустим только дефис)"
+    }
+  }
+};
+export const secondNameRule = {
+  second_name: {
+    isName: {
+      message:
+        "Некорректная фамилия: латиница или кириллица, первая буква должна быть заглавной, без пробелов и без цифр, нет спецсимволов (допустим только дефис)"
+    }
+  }
+};
 export const messageRule = {
   message: {
     isRequired: {
@@ -68,11 +84,14 @@ export const messageRule = {
     }
   }
 };
+
 export const validationRules = {
   ...loginRule,
   ...passwordRule,
   ...emailRule,
   ...phoneRule,
+  ...firstNameRule,
+  ...secondNameRule,
   ...messageRule
 };
 
@@ -80,7 +99,9 @@ export enum ValidationField {
   Login = "login",
   Password = "password",
   Email = "email",
-  First_name = "first_name",
-  Second_name = "second_name",
-  Phone = "phone"
+  FirstName = "first_name",
+  SecondName = "second_name",
+  DisplayName = "display_name",
+  Phone = "phone",
+  Message = "message"
 }

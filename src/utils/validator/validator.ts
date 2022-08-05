@@ -1,6 +1,6 @@
 import { validationRules } from "utils/validator";
 
-export default function validator(data, config?) {
+export function validator(data, config?) {
   config = config || findRule(data);
   if (Object.keys(config).length === 0) {
     return { error: "Ошибка валидации" };
@@ -34,6 +34,11 @@ export default function validator(data, config?) {
         statusValidate = !emailRegExp.test(data);
         break;
       }
+      case "isName": {
+        const emailRegExp = /^[a-zA-Zа-яА-ЯёЁ][a-zA-Zа-яА-ЯёЁ-]*$/g;
+        statusValidate = !emailRegExp.test(data);
+        break;
+      }
       case "isCapitalSymbol": {
         const capitalRegExp = /[A-Z]+/g;
         statusValidate = !capitalRegExp.test(data);
@@ -59,6 +64,13 @@ export default function validator(data, config?) {
   }
   for (const fieldName in data) {
     for (const validateMethod in config[fieldName]) {
+      if (
+        data[fieldName] === "" &&
+        !config[fieldName].hasOwnProperty("isRequired")
+      ) {
+        continue;
+      }
+
       const error = validate(
         validateMethod,
         data[fieldName],
@@ -79,4 +91,18 @@ function findRule(data) {
     }
   }
   return {};
+}
+
+export function validateData(data) {
+  const errors = validator(data, validationRules);
+  if (Object.keys(errors).length === 0) {
+    return true;
+  } else {
+    for (let errorsKey in errors) {
+      this.refs[errorsKey]?.refs.error.setProps({
+        errorText: errors[errorsKey]
+      });
+    }
+  }
+  return false;
 }
