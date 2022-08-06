@@ -94,7 +94,10 @@ function findRule(data) {
 }
 
 export function validateData(data) {
-  const errors = validator(data, validationRules);
+  const errors = {
+    ...validator(data, validationRules),
+    ...comparePasswords(data)
+  };
   if (Object.keys(errors).length === 0) {
     return true;
   } else {
@@ -105,4 +108,34 @@ export function validateData(data) {
     }
   }
   return false;
+}
+
+function comparePasswords(data) {
+  let passwordErrors = {};
+  if (
+    data.hasOwnProperty("password") &&
+    data.hasOwnProperty("new_password") &&
+    data.hasOwnProperty("new_password_confirm")
+  ) {
+    if (
+      data.new_password !== data.new_password_confirm &&
+      data.new_password !== "" &&
+      data.new_password_confirm !== ""
+    ) {
+      passwordErrors = {
+        new_password: "Пароли не совпадают",
+        new_password_confirm: "Пароли не совпадают"
+      };
+    }
+    if (
+      data.password === data.new_password &&
+      data.password !== "" &&
+      data.new_password !== ""
+    ) {
+      passwordErrors = {
+        new_password: "Новый пароль не должен совпадать со старым"
+      };
+    }
+  }
+  return passwordErrors;
 }

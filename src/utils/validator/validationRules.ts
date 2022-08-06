@@ -34,6 +34,20 @@ export const passwordRule = {
   }
 };
 
+export const newPasswordRule = {
+  new_password: {
+    ...passwordRule.password,
+    isRequired: { message: "Введите новый пароль" }
+  }
+};
+
+export const confirmPasswordRule = {
+  new_password_confirm: {
+    ...passwordRule.password,
+    isRequired: { message: "Введите подтверждение пароля" }
+  }
+};
+
 export const emailRule = {
   email: {
     isRequired: {
@@ -88,6 +102,8 @@ export const messageRule = {
 export const validationRules = {
   ...loginRule,
   ...passwordRule,
+  ...newPasswordRule,
+  ...confirmPasswordRule,
   ...emailRule,
   ...phoneRule,
   ...firstNameRule,
@@ -98,6 +114,8 @@ export const validationRules = {
 export enum ValidationField {
   Login = "login",
   Password = "password",
+  NewPassword = "new_password",
+  ConfirmPassword = "new_password_confirm",
   Email = "email",
   FirstName = "first_name",
   SecondName = "second_name",

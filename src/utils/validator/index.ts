@@ -1,3 +1,3 @@
-import validator from "./validator";
+import { validator, validateData } from "./validator";
 import { validationRules, ValidationField } from "./validationRules";
-export { validator, validationRules, ValidationField };
+export { validator, validateData, validationRules, ValidationField };
