@@ -63,7 +63,18 @@ body {
 .hidden {
   display: none;
 }
-
+.link {
+  display: block;
+  font-size: 12px;
+  line-height: 11px;
+  font-weight: 600;
+  color: var(--blue);
+  margin-top: 14px;
+  text-align: center;
+}
+.link:hover {
+  text-decoration: underline;
+}
 /* end common */
 
 //login page
@@ -97,6 +108,9 @@ body {
   color: var(--blue);
   margin-top: 14px;
   text-align: center;
+}
+.login-form__link:hover {
+  text-decoration: underline;
 }
 
 /*error page*/
@@ -491,7 +505,7 @@ body {
 .profile-data__user-title {
   font-size: 18px;
   font-weight: 600;
-  margin-bottom: 5px;
+  margin-bottom: 25px;
   text-align: center;
 }
 
@@ -567,6 +581,9 @@ body {
   color: var(--error);
   margin-bottom: 10px;
 }
+.profile-data__exit-button:hover {
+  text-decoration: underline;
+}
 
 .personal-image__error-text {
   color: var(--error);
@@ -575,7 +592,14 @@ body {
   margin-bottom: 15px;
 }
 
-.profile-data__exit-button:hover,
-.profile-data__exit-button:focus {
-  color: var(--blue);
+.profile-data__divider {
+  margin-top: 20px;
+}
+
+.no-border {
+  border: none;
+}
+
+.no-pointer {
+  cursor: default;
 }
