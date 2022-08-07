@@ -16,6 +16,18 @@ export const loginRule = {
     }
   }
 };
+export const user_to_deleteRule = {
+  user_to_delete: {
+    ...loginRule.login,
+    isRequired: { message: "Введите логин пользователя для удаления" }
+  }
+};
+export const user_to_addRule = {
+  user_to_add: {
+    ...loginRule.login,
+    isRequired: { message: "Введите логин пользователя для добавления" }
+  }
+};
 export const passwordRule = {
   password: {
     isRequired: {
@@ -33,6 +45,12 @@ export const passwordRule = {
     isContainDigit: { message: "Не менее 1 цифры" }
   }
 };
+export const passwordConfirmRule = {
+  password_confirm: {
+    ...passwordRule.password,
+    isRequired: { message: "Введите пароль повторно" }
+  }
+};
 
 export const newPasswordRule = {
   new_password: {
@@ -41,10 +59,10 @@ export const newPasswordRule = {
   }
 };
 
-export const confirmPasswordRule = {
+export const newPasswordConfirmRule = {
   new_password_confirm: {
     ...passwordRule.password,
-    isRequired: { message: "Введите подтверждение пароля" }
+    isRequired: { message: "Введите новый пароль повторно" }
   }
 };
 
@@ -101,9 +119,12 @@ export const messageRule = {
 
 export const validationRules = {
   ...loginRule,
+  ...user_to_addRule,
+  ...user_to_deleteRule,
   ...passwordRule,
+  ...passwordConfirmRule,
   ...newPasswordRule,
-  ...confirmPasswordRule,
+  ...newPasswordConfirmRule,
   ...emailRule,
   ...phoneRule,
   ...firstNameRule,
@@ -113,9 +134,12 @@ export const validationRules = {
 
 export enum ValidationField {
   Login = "login",
+  UserToAdd = "user_to_add",
+  UserToDelete = "user_to_delete",
   Password = "password",
+  PasswordConfirm = "password_confirm",
   NewPassword = "new_password",
-  ConfirmPassword = "new_password_confirm",
+  NewPasswordConfirm = "new_password_confirm",
   Email = "email",
   FirstName = "first_name",
   SecondName = "second_name",

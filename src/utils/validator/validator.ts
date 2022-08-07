@@ -1,12 +1,12 @@
 import { validationRules } from "utils/validator";
 
-export function validator(data, config?) {
+export function validator(data: object, config?: object) {
   config = config || findRule(data);
   if (Object.keys(config).length === 0) {
     return { error: "Ошибка валидации" };
   }
   const errors = {};
-  function validate(validateMethod, data, config) {
+  function validate(validateMethod: string, data: string, config: object) {
     let statusValidate;
     switch (validateMethod) {
       case "isRequired": {
@@ -23,7 +23,6 @@ export function validator(data, config?) {
         statusValidate = !emailRegExp.test(data);
         break;
       }
-      //
       case "isLogin": {
         const emailRegExp = /^[a-zA-Z][a-zA-Z0-9-_]*$/g;
         statusValidate = !emailRegExp.test(data);
@@ -93,7 +92,7 @@ function findRule(data) {
   return {};
 }
 
-export function validateData(data) {
+export function validateData(data): boolean {
   const errors = {
     ...validator(data, validationRules),
     ...comparePasswords(data)
@@ -134,6 +133,16 @@ function comparePasswords(data) {
     ) {
       passwordErrors = {
         new_password: "Новый пароль не должен совпадать со старым"
+      };
+    }
+  } else if (
+    data.hasOwnProperty("password") &&
+    data.hasOwnProperty("password_confirm")
+  ) {
+    if (data.password !== data.password_confirm) {
+      passwordErrors = {
+        password: "Пароли не совпадают",
+        password_confirm: "Пароли не совпадают"
       };
     }
   }
