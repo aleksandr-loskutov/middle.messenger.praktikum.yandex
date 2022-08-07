@@ -5,14 +5,14 @@ import { getValuesFromElements } from "utils/dom";
 export class RegisterPage extends Component {
   static componentName = "RegisterPage";
 
-  constructor(props) {
+  constructor() {
     super({
-      ...props,
-      onRegister: (e) => {
+      onRegister: (e: PointerEvent) => {
         e.preventDefault();
         const registrationData = getValuesFromElements.bind(this)(
           "login",
           "password",
+          "password_confirm",
           "email",
           "first_name",
           "second_name",
@@ -24,7 +24,7 @@ export class RegisterPage extends Component {
       }
     });
   }
-  render() {
+  render(): string {
     // language=hbs
     return `
         <main class="main-auth">
@@ -38,7 +38,7 @@ export class RegisterPage extends Component {
                         {{{ControlledInput type="text" name="second_name" id="second_name" label="Фамилия" ref="second_name" validationField = "${ValidationField.SecondName}"}}}
                         {{{ControlledInput type="tel" name="phone" id="phone" label="Телефон" error="Неверный номер телефона" ref="phone" validationField = "${ValidationField.Phone}"}}}
                         {{{ControlledInput type="password" name="password" id="password" label="Пароль" error="Пароль должен быть не менее 6 символов" ref="password" validationField = "${ValidationField.Password}"}}}
-                        {{{ControlledInput type="password" name="password2" id="password2" label="Пароль (еще раз)" error="Пароли не совпадают" ref="password2" validationField = "${ValidationField.Password}"}}}
+                        {{{ControlledInput type="password" name="password_confirm" id="password_confirm" label="Пароль (еще раз)" ref="password_confirm" validationField = "${ValidationField.PasswordConfirm}"}}}
                     </div>
                     <div class="login-form__buttons-block">
                         {{{Button type="submit" text="Зарегистрироваться" id="register-button" onClick=onRegister}}}

@@ -1,7 +1,10 @@
-export const chats = [
+import { ChatProps } from "components/chat/chat";
+import { CurrentChatProps } from "pages/chat/chatPage";
+import { User } from "types";
+export const chats: ChatProps[] = [
   {
     chatName: "Alex",
-    userAvatar: "https://avatars.dicebear.com/api/avataaars/h4gma.svg",
+    userAvatar: "https://i.pravatar.cc/150?img=11",
     messageText: "Hello lorem ipsum dolor sit amet",
     messageTime: "11:00",
     isChatActive: true,
@@ -9,7 +12,7 @@ export const chats = [
   },
   {
     chatName: "Bob",
-    userAvatar: "https://avatars.dicebear.com/api/avataaars/nxf62.svg",
+    userAvatar: "https://i.pravatar.cc/150?img=3",
     userMessage: true,
     messageText: "Hi, how are you?",
     messageTime: "19:13",
@@ -18,9 +21,9 @@ export const chats = [
   }
 ];
 
-export const currentChat = {
+export const currentChat: CurrentChatProps = {
   chatName: "Alex",
-  chatAvatar: "https://avatars.dicebear.com/api/avataaars/h4gma.svg",
+  chatAvatar: "https://i.pravatar.cc/150?img=11",
   messages: [
     {
       id: 1,
@@ -47,7 +50,7 @@ export const currentChat = {
       owner: true,
       isText: true,
       isSent: true,
-      isViewed: false
+      isViewed: true
     },
     {
       id: 4,
@@ -56,17 +59,36 @@ export const currentChat = {
       owner: false,
       isText: true
     },
+
     {
       id: 5,
       image: `https://icdn.lenta.ru/images/2014/03/24/18/20140324182611102/pic_4fcc1b7a6ba0b0c545c1245d66373735.jpg`,
       messageTime: "13:50",
       owner: false,
       isText: false
+    },
+    {
+      id: 6,
+      messageText: `Гвозди забивать?`,
+      messageTime: "13:54",
+      owner: true,
+      isText: true,
+      isSent: true,
+      isViewed: false
     }
   ]
 };
 
+export const user: User = {
+  id: 1,
+  name: "Александр",
+  avatar: "https://i.pravatar.cc/150?img=6",
+  login: "alex",
+  phone: "89211111111"
+};
+
 export const mockData = {
   chats,
-  currentChat
+  currentChat,
+  user
 };

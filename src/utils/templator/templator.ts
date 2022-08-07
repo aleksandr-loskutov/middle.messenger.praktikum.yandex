@@ -1,6 +1,6 @@
 import Handlebars from "handlebars";
-export function Templator(template, data: {} | undefined) {
-  return data
-    ? Handlebars.compile(template)(data)
+export function Templator(template: string, props?: {}) {
+  return props
+    ? Handlebars.compile(template)(props)
     : Handlebars.compile(template);
 }

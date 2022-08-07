@@ -1,41 +1,40 @@
 import { validator } from "utils/validator";
 import Component from "core/component";
+import { InputProps } from "../input/input";
+import { ValidationField } from "utils/validator";
+
+export interface ControlledInputProps extends InputProps {
+  label?: string;
+  errorClass?: string;
+  validationField?: ValidationField;
+}
 
 export class ControlledInput extends Component {
   static componentName = "ControlledInput";
   constructor({
     layout = "default",
     type = "text",
-    label,
-    value,
     validationField,
     ...props
-  }) {
+  }: ControlledInputProps) {
     super({
       ...props,
       layout,
       type,
-      label,
-      value,
       validationField,
-      onFocus: (e) => {
-        const input = e.target;
+      onFocus: () => {
         this.refs.error.setProps({ errorText: "" });
       },
-      onChange: (e) => {
-        const input = e.target;
-        const value = input.value;
-      },
-      onEnter: (e) => {
-        const input = e.target;
-        const value = input.value;
+      onEnter: (e: KeyboardEvent) => {
+        const input = e.target as HTMLTextAreaElement;
+        const value = input?.value;
         if (e.key === "Enter" && value) {
           e.preventDefault();
           input.value = "";
         }
       },
-      onBlur: (e) => {
-        const input = e.target;
+      onBlur: (e: FocusEvent) => {
+        const input = e.target as HTMLTextAreaElement;
         const value = input.value;
         if (validationField) {
           const error = validator({ [validationField]: value });
@@ -47,7 +46,7 @@ export class ControlledInput extends Component {
     });
   }
 
-  protected render() {
+  protected render(): string {
     // language=hbs
     return `
         {{#ifEquals layout "default"}}

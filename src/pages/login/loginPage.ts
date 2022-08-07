@@ -5,10 +5,9 @@ import { getValuesFromElements } from "utils/dom";
 export class LoginPage extends Component {
   static componentName = "LoginPage";
 
-  constructor(props) {
+  constructor() {
     super({
-      ...props,
-      onLogin: (e) => {
+      onLogin: (e: PointerEvent) => {
         e.preventDefault();
         const loginData = getValuesFromElements.bind(this)("login", "password");
         if (validateData.bind(this)(loginData)) {
@@ -18,7 +17,7 @@ export class LoginPage extends Component {
     });
   }
 
-  render() {
+  render(): string {
     // language=hbs
     return `
         <main class="main-auth">
