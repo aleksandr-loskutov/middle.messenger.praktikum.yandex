@@ -1,3 +1,6 @@
 /dist
 /node_modules
+/.parcel-cache
+*.scss
 **/*.min.js
+*.html

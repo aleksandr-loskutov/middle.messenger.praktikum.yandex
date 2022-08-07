@@ -1,23 +1,26 @@
 :root {
-  /*login*/
+  /* login */
   --black: #1e1e1e;
   --dark: #8d8d8d;
-  --gray: #999999;
+  --gray: #999;
   --light-gray: #f8f8f8;
   --extra-light-gray: #efefef;
   --light-gray-second: #fbfbfb;
-  --transparent-gray: rgba(82, 82, 82, 0.5);
+  --transparent-gray: rgb(82 82 82 / 50%);
   --light: #f2f2f2;
-  --white: #ffffff;
-  /*additional*/
+  --white: #fff;
+
+  /* additional */
   --blue: #3369f3;
   --blue-hover: #2e5be2;
   --light-blue: #e4edfd;
   --cold-light: #83b3d3;
   --cold-dark: #68a2ca;
-  --box-shadow: rgba(0, 0, 0, 0.14);
-  /*status*/
+  --box-shadow: rgb(0 0 0 / 14%);
+
+  /* status */
   --error: #ff2f2f;
-  /*icons*/
+
+  /* icons */
   --icon-color: #3369f3;
 }

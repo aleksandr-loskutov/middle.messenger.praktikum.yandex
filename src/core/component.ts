@@ -63,8 +63,8 @@ export default class Component<P = any> {
   _componentDidMount(props: P) {
     this.componentDidMount(props);
   }
-
-  componentDidMount(props: P) {}
+  //eslint-disable-next-line
+  componentDidMount() {}
 
   _componentDidUpdate(oldProps: P, newProps: P) {
     const response = this.componentDidUpdate(oldProps, newProps);
@@ -74,7 +74,7 @@ export default class Component<P = any> {
     this._render();
   }
 
-  componentDidUpdate(oldProps: P, newProps: P) {
+  componentDidUpdate() {
     //todo
     return true;
   }
@@ -202,7 +202,7 @@ export default class Component<P = any> {
       /**
        * Ищем элемент layout-а, куда вставлять детей
        */
-      const layoutContent = content.querySelector('[data-layout="1"]');
+      const layoutContent = content.querySelector("[data-layout=\"1\"]");
       if (layoutContent && stubChilds.length) {
         layoutContent.append(...stubChilds);
       }

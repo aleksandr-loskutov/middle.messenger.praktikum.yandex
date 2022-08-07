@@ -5,7 +5,7 @@ interface ComponentConstructable<Props = any> {
   new (props: Props): Component;
   componentName: string;
 }
-
+//eslint-disable-next-line
 export default function registerComponent<Props extends any>(
   Component: ComponentConstructable<Props>
 ) {

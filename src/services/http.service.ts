@@ -98,8 +98,8 @@ function fetchWithRetry(url: string, options): Promise<any> {
 
 function queryStringify(data: object): string {
   let result = "";
-  for (let key in data) {
-    if (data.hasOwnProperty(key)) {
+  for (const key in data) {
+    if (Object.prototype.hasOwnProperty.call(data, key)) {
       if (typeof data[key] === "object") {
         result += `${key}=${JSON.stringify(data[key])}&`;
       } else {

@@ -1,5 +1,4 @@
 import Component from "core/component";
-import "./image.scss";
 
 interface ImageProps {
   type: "img" | "icon";

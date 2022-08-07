@@ -65,7 +65,7 @@ export function validator(data: object, config?: object) {
     for (const validateMethod in config[fieldName]) {
       if (
         data[fieldName] === "" &&
-        !config[fieldName].hasOwnProperty("isRequired")
+        !Object.prototype.hasOwnProperty.call(config[fieldName], "isRequired")
       ) {
         continue;
       }
@@ -85,7 +85,7 @@ export function validator(data: object, config?: object) {
 
 function findRule(data) {
   for (const fieldName in data) {
-    if (validationRules.hasOwnProperty(fieldName)) {
+    if (Object.prototype.hasOwnProperty.call(validationRules, fieldName)) {
       return { [fieldName]: validationRules[fieldName] };
     }
   }
@@ -100,7 +100,7 @@ export function validateData(data): boolean {
   if (Object.keys(errors).length === 0) {
     return true;
   } else {
-    for (let errorsKey in errors) {
+    for (const errorsKey in errors) {
       this.refs[errorsKey]?.refs.error.setProps({
         errorText: errors[errorsKey]
       });
@@ -112,9 +112,9 @@ export function validateData(data): boolean {
 function comparePasswords(data) {
   let passwordErrors = {};
   if (
-    data.hasOwnProperty("password") &&
-    data.hasOwnProperty("new_password") &&
-    data.hasOwnProperty("new_password_confirm")
+    Object.prototype.hasOwnProperty.call(data, "password") &&
+    Object.prototype.hasOwnProperty.call(data, "new_password") &&
+    Object.prototype.hasOwnProperty.call(data, "new_password_confirm")
   ) {
     if (
       data.new_password !== data.new_password_confirm &&
@@ -136,8 +136,8 @@ function comparePasswords(data) {
       };
     }
   } else if (
-    data.hasOwnProperty("password") &&
-    data.hasOwnProperty("password_confirm")
+    Object.prototype.hasOwnProperty.call(data, "password") &&
+    Object.prototype.hasOwnProperty.call(data, "password_confirm")
   ) {
     if (data.password !== data.password_confirm) {
       passwordErrors = {

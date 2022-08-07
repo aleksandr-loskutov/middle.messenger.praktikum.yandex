@@ -27,9 +27,6 @@ export function addListeners() {
           modalDeleteUser.style.display = "none";
         }
       }
-      //todo chat-options & attach-options
-      const chatOptions = document.getElementById("chat-options");
-      const attachOptions = document.getElementById("attach-options");
     }
     if (window.location.pathname === "/profile") {
       const personalImage = document.getElementById("user-avatar");
@@ -41,7 +38,7 @@ export function addListeners() {
   };
 }
 
-export function getValuesFromElements(...names: string[]): {} {
+export function getValuesFromElements(...names: string[]): object {
   const data = {};
   names.forEach((name) => {
     const element = this.element?.querySelector(
