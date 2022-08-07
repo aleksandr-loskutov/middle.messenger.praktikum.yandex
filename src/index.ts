@@ -10,45 +10,45 @@ import {
 import "css/style.scss";
 import render from "core/render";
 import registerComponent from "core/registerComponent";
+import { addListeners } from "utils/dom";
 import mockData from "utils/mock";
 import components from "components";
-import { addListeners } from "utils/dom";
 
 Handlebars.registerHelper("ifEquals", function (arg1, arg2, options) {
   return arg1 == arg2 ? options.fn(this) : options.inverse(this);
 });
 
-for (let componentKey in components) {
-  registerComponent(components[componentKey]);
+for (const [, component] of Object.entries(components)) {
+  registerComponent(component);
 }
 
 window.onload = function (): void {
   let page;
   switch (window.location.pathname) {
     case "/":
-      page = new LoginPage({});
+      page = new LoginPage();
       break;
     case "/login":
-      page = new LoginPage({});
+      page = new LoginPage();
       break;
     case "/register":
-      page = new RegisterPage({});
+      page = new RegisterPage();
       break;
     case "/password":
       page = new PasswordChangePage({
-        user: { name: "Александр", avatar: "https://i.pravatar.cc/150?img=6" }
+        user: { ...mockData.user }
       });
       break;
     case "/chat":
-      page = new ChatPage({ ...mockData });
+      page = new ChatPage(mockData);
       break;
     case "/profile":
       page = new ProfilePage({
-        user: { name: "Александр", avatar: "https://i.pravatar.cc/150?img=6" }
+        user: { ...mockData.user }
       });
       break;
     default:
-      page = new ErrorPage({ errorText: "Не туда попали", errorCode: "404" });
+      page = new ErrorPage({});
       break;
   }
   render(page);
