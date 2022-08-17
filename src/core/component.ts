@@ -40,14 +40,14 @@ export default class Component<P = any> {
     eventBus.emit(Component.EVENTS.INIT, this.props);
   }
 
-  _registerEvents(eventBus: EventBus<Events>) {
+  private _registerEvents(eventBus: EventBus<Events>) {
     eventBus.on(Component.EVENTS.INIT, this.init.bind(this));
     eventBus.on(Component.EVENTS.FLOW_CDM, this._componentDidMount.bind(this));
     eventBus.on(Component.EVENTS.FLOW_CDU, this._componentDidUpdate.bind(this));
     eventBus.on(Component.EVENTS.FLOW_RENDER, this._render.bind(this));
   }
 
-  _createResources() {
+  private _createResources() {
     this._element = this._createDocumentElement("div");
   }
 
@@ -60,13 +60,13 @@ export default class Component<P = any> {
     this.eventBus().emit(Component.EVENTS.FLOW_RENDER, this.props);
   }
 
-  _componentDidMount(props: P) {
+  private _componentDidMount(props: P) {
     this.componentDidMount(props);
   }
   //eslint-disable-next-line
   componentDidMount() {}
 
-  _componentDidUpdate(oldProps: P, newProps: P) {
+  private _componentDidUpdate(oldProps: P, newProps: P) {
     const response = this.componentDidUpdate(oldProps, newProps);
     if (!response) {
       return;
@@ -99,7 +99,7 @@ export default class Component<P = any> {
     return this._element;
   }
 
-  _render() {
+  private _render() {
     const fragment = this._compile();
     this._removeEvents();
     const newElement = fragment.firstElementChild!;
@@ -127,7 +127,7 @@ export default class Component<P = any> {
     return this.element!;
   }
 
-  _makePropsProxy(props: any): any {
+  private _makePropsProxy(props: any): any {
     const self = this;
     return new Proxy(props as unknown as object, {
       get(target: Record<string, unknown>, prop: string) {
@@ -146,11 +146,11 @@ export default class Component<P = any> {
     }) as unknown as P;
   }
 
-  _createDocumentElement(tagName: string) {
+  private _createDocumentElement(tagName: string) {
     return document.createElement(tagName);
   }
 
-  _removeEvents() {
+  private _removeEvents() {
     const events: Record<string, () => void> = (this.props as any).events;
     if (!events || !this._element) {
       return;
@@ -160,7 +160,7 @@ export default class Component<P = any> {
     });
   }
 
-  _addEvents() {
+  private _addEvents() {
     const events: Record<string, () => void> = (this.props as any).events;
     if (!events) {
       return;
@@ -170,7 +170,7 @@ export default class Component<P = any> {
     });
   }
 
-  _compile(): DocumentFragment {
+  private _compile(): DocumentFragment {
     const fragment = document.createElement("template");
     /**
      * Рендерим шаблон

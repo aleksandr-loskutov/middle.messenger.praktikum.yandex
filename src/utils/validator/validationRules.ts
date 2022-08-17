@@ -16,13 +16,13 @@ export const loginRule = {
     }
   }
 };
-export const user_to_deleteRule = {
+export const userToDeleteRule = {
   user_to_delete: {
     ...loginRule.login,
     isRequired: { message: "Введите логин пользователя для удаления" }
   }
 };
-export const user_to_addRule = {
+export const userToAddRule = {
   user_to_add: {
     ...loginRule.login,
     isRequired: { message: "Введите логин пользователя для добавления" }
@@ -119,8 +119,8 @@ export const messageRule = {
 
 export const validationRules = {
   ...loginRule,
-  ...user_to_addRule,
-  ...user_to_deleteRule,
+  ...userToAddRule,
+  ...userToDeleteRule,
   ...passwordRule,
   ...passwordConfirmRule,
   ...newPasswordRule,

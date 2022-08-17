@@ -2,9 +2,9 @@ import Component from "core/component";
 import { ValidationField, validateData } from "utils/validator";
 import { getValuesFromElements } from "utils/dom";
 import { User } from "types/user";
+
 export class PasswordChangePage extends Component {
   static componentName = "PasswordChangePage";
-
   constructor(props: { user: User }) {
     super({
       ...props,

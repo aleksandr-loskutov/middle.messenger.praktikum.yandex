@@ -16,6 +16,7 @@ export function deleteUserModal() {
   const modalDeleteUser = document.getElementById("modal-delete-user");
   modalDeleteUser.style.display = "block";
 }
+//TODO переработать
 export function addListeners() {
   window.onclick = function (event) {
     if (window.location.pathname === "/chat") {
