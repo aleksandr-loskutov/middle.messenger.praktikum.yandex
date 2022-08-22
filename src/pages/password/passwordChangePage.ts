@@ -18,6 +18,9 @@ export class PasswordChangePage extends Component {
         if (validateData.bind(this)(userPasswords)) {
           console.log("Пароли:", userPasswords);
         }
+      },
+      onBackButtonClick: () => {
+        this.props.router.back();
       }
     });
   }
@@ -26,11 +29,7 @@ export class PasswordChangePage extends Component {
     // language=hbs
     return `
         <main class="main-chat">
-            <div class="sidebar-with-back-btn">
-                <a class="sidebar-with-back-btn__button" href="/profile">
-                  {{{Image type="icon" icon="back-arrow"}}}
-                </a>
-            </div>
+                {{{Button class="sidebar-with-back-btn__button" wrapperClass="sidebar-with-back-btn" icon="back-arrow" onClick=onBackButtonClick}}}
             <div class="chat-container">
                 <div class="profile-data">
                     <form class="profile-data__form">

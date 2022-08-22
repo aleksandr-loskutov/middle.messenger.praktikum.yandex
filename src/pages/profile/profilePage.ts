@@ -21,6 +21,12 @@ export class ProfilePage extends Component {
         if (validateData.bind(this)(userData)) {
           console.log("Данные пользователя:", userData);
         }
+      },
+      onBackButtonClick: () => {
+        this.props.router.back();
+      },
+      onChangePasswordLinkClick: () => {
+        this.props.router.go("/password");
       }
     });
   }
@@ -29,11 +35,7 @@ export class ProfilePage extends Component {
     // language=hbs
     return `
         <main class="main-chat">
-            <div class="sidebar-with-back-btn">
-                <a class="sidebar-with-back-btn__button" href="/chat">
-                    {{{Image type="icon" icon="back-arrow"}}}
-                </a>
-            </div>
+            {{{Button class="sidebar-with-back-btn__button" wrapperClass="sidebar-with-back-btn" icon="back-arrow" onClick=onBackButtonClick}}}
             <div class="chat-container">
                 <div class="profile-data">
                     <form class="profile-data__form">
@@ -60,9 +62,7 @@ export class ProfilePage extends Component {
                             {{{ControlledInput layout="profile" name="display_name" ref="display_name" id="display_name" label="Имя в чате" placeholder="Icanhazchatname" validationField = "${ValidationField.DisplayName}"}}}
                             {{{ControlledInput layout="profile" name="phone" id="phone" ref="phone" label="Телефон" placeholder="+799999999" validationField = "${ValidationField.Phone}"}}}
                             <div class="profile-data__divider"></div>
-                            <div class="profile-data__row no-border">
-                                <a href="/password" class="link">[ Изменить пароль ]</a>
-                            </div>                             
+                                {{{Link text="[ Изменить пароль ]" class="login-form__link" wrapperClass="profile-data__row no-border" onClick=onChangePasswordLinkClick}}}
                             <div class="profile-data__row no-border">
                                 {{{Button class="profile-data__exit-button" type="button" text="[ Выйти ]"}}}
                             </div>

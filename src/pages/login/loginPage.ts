@@ -5,18 +5,21 @@ import { getValuesFromElements } from "utils/dom";
 export class LoginPage extends Component {
   static componentName = "LoginPage";
 
-  constructor() {
+  constructor(props) {
     super({
+      ...props,
       onLogin: (e: PointerEvent) => {
         e.preventDefault();
         const loginData = getValuesFromElements.bind(this)("login", "password");
         if (validateData.bind(this)(loginData)) {
           console.log("Данные входа:", loginData);
         }
+      },
+      onRegisterLinkClick: () => {
+        this.props.router.go("/sign-up");
       }
     });
   }
-
   render(): string {
     // language=hbs
     return `
@@ -30,7 +33,7 @@ export class LoginPage extends Component {
               </div>
               <div class="login-form__buttons-block">
                 {{{Button type="submit" text="Вход" id="login-button" onClick=onLogin}}}
-                <a href="/register" class="login-form__link">Нет аккаунта?</a>
+                  {{{Link text="Нет аккаунта?" class="login-form__link" onClick=onRegisterLinkClick}}}
               </div>
             </form>
           </div>

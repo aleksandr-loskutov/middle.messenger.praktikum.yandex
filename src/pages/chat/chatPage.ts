@@ -56,6 +56,9 @@ export class ChatPage extends Component {
         if (validateData.bind(this)(userToDelete)) {
           console.log("Удален пользователь:", userToDelete);
         }
+      },
+      onProfileLinkClick: () => {
+        this.props.router.go("/settings");
       }
     });
   }
@@ -65,7 +68,7 @@ export class ChatPage extends Component {
     return `
         <main class="main-chat">
             <div class="sidebar">
-                <a href="/profile" class="sidebar__profile-link">Профиль &nbsp;></a>
+                {{{Link text="Профиль >" class="sidebar__profile-link" onClick=onProfileLinkClick}}}
                 {{{ControlledInput name="search" placeholder="Поиск" type="text" id="search" class="sidebar__search-input"}}}
                 <ul class="sidebar__chat-list">
                      {{#each chats}}
@@ -125,7 +128,7 @@ export class ChatPage extends Component {
                             </div>
                             <form class="action-bar__form">
                                 <div class="action-bar__textarea">
-              {{{ControlledInput 
+              {{{ControlledInput
                       name="message"
                       id="message"
                       ref="message"

@@ -5,8 +5,9 @@ import { getValuesFromElements } from "utils/dom";
 export class RegisterPage extends Component {
   static componentName = "RegisterPage";
 
-  constructor() {
+  constructor(props) {
     super({
+      ...props,
       onRegister: (e: PointerEvent) => {
         e.preventDefault();
         const registrationData = getValuesFromElements.bind(this)(
@@ -21,6 +22,9 @@ export class RegisterPage extends Component {
         if (validateData.bind(this)(registrationData)) {
           console.log("Данные регистрации:", registrationData);
         }
+      },
+      onRegisterLinkClick: () => {
+        this.props.router.go("/");
       }
     });
   }
@@ -42,7 +46,7 @@ export class RegisterPage extends Component {
                     </div>
                     <div class="login-form__buttons-block">
                         {{{Button type="submit" text="Зарегистрироваться" id="register-button" onClick=onRegister}}}
-                        <a href="/login" class="login-form__link">Уже есть аккаунт? Войти</a>
+                        {{{Link text="Уже есть аккаунт? Войти" class="login-form__link" onClick=onRegisterLinkClick}}}
                     </div>
                 </form>
             </div>

@@ -8,11 +8,10 @@ import {
   PasswordChangePage
 } from "pages";
 import "css/style.scss";
-import render from "core/render";
 import registerComponent from "core/registerComponent";
-import { addListeners } from "utils/dom";
 import mockData from "utils/mock";
 import components from "components";
+import { Router } from "core";
 
 Handlebars.registerHelper("ifEquals", function (arg1, arg2, options) {
   return arg1 == arg2 ? options.fn(this) : options.inverse(this);
@@ -22,35 +21,12 @@ for (const [, component] of Object.entries(components)) {
   registerComponent(component);
 }
 
-window.onload = function (): void {
-  let page;
-  switch (window.location.pathname) {
-    case "/":
-      page = new LoginPage();
-      break;
-    case "/login":
-      page = new LoginPage();
-      break;
-    case "/register":
-      page = new RegisterPage();
-      break;
-    case "/password":
-      page = new PasswordChangePage({
-        user: { ...mockData.user }
-      });
-      break;
-    case "/chat":
-      page = new ChatPage(mockData);
-      break;
-    case "/profile":
-      page = new ProfilePage({
-        user: { ...mockData.user }
-      });
-      break;
-    default:
-      page = new ErrorPage({});
-      break;
-  }
-  render(page);
-  addListeners();
-};
+const router = new Router();
+
+router.use("/", LoginPage);
+router.use("/sign-up", RegisterPage);
+router.use("/messenger", ChatPage, mockData);
+router.use("/settings", ProfilePage, { user: { ...mockData.user } });
+router.use("/password", PasswordChangePage);
+router.use("*", ErrorPage);
+router.start();
