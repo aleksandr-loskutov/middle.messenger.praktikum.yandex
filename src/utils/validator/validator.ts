@@ -18,29 +18,29 @@ export function validator(data: object, config?: object) {
         break;
       }
       case "isEmail": {
-        const emailRegExp =
+        const regExp =
           /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        statusValidate = !emailRegExp.test(data);
+        statusValidate = !regExp.test(data);
         break;
       }
       case "isLogin": {
-        const emailRegExp = /^[a-zA-Z][a-zA-Z0-9-_]*$/g;
-        statusValidate = !emailRegExp.test(data);
+        const regExp = /^[a-zA-Z][a-zA-Z0-9-_]*$/g;
+        statusValidate = !regExp.test(data);
         break;
       }
       case "isPhone": {
-        const emailRegExp = /^\+?\d{10,15}$/g;
-        statusValidate = !emailRegExp.test(data);
+        const regExp = /^\+?\d{10,15}$/g;
+        statusValidate = !regExp.test(data);
         break;
       }
       case "isName": {
-        const emailRegExp = /^[a-zA-Zа-яА-ЯёЁ][a-zA-Zа-яА-ЯёЁ-]*$/g;
-        statusValidate = !emailRegExp.test(data);
+        const regExp = /^[a-zA-Zа-яА-ЯёЁ][a-zA-Zа-яА-ЯёЁ-]*$/g;
+        statusValidate = !regExp.test(data);
         break;
       }
       case "isCapitalSymbol": {
-        const capitalRegExp = /[A-Z]+/g;
-        statusValidate = !capitalRegExp.test(data);
+        const regExp = /[A-Z]+/g;
+        statusValidate = !regExp.test(data);
         break;
       }
       case "isContainDigit": {

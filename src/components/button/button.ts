@@ -9,6 +9,7 @@ interface ButtonProps {
   text?: string;
   span?: string;
   spanClass?: string;
+  wrapperClass?: string;
   icon?: string;
 }
 export class Button extends Component {
@@ -20,7 +21,7 @@ export class Button extends Component {
   render(): string {
     // language=hbs
     return `
-        <div class="button-wrapper">
+        <div class="{{#if wrapperClass}}{{wrapperClass}}{{else}}button-wrapper{{/if}}">
           <button  id="{{id}}" type="{{#if type}}{{type}}{{else}}button{{/if}}" class="{{#if class}}{{class}}{{else}}button{{/if}}">
           {{#if text}}
               {{text}}
