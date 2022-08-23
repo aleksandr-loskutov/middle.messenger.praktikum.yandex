@@ -1,5 +1,5 @@
-import { isEqual } from "../utils/isEqual";
-import render from "../core/render";
+import { isEqual } from "utils/helpers";
+import render from "core/render";
 
 class Route {
   constructor(pathname, view, props) {
