@@ -12,3 +12,17 @@ export type UserDTO = {
   phone: string;
   email: string;
 };
+
+export type LoginData = {
+  login: string;
+  password: string;
+};
+
+export type RegisterData = {
+  first_name: string;
+  second_name: string;
+  login: string;
+  email: string;
+  password: string;
+  phone: string;
+};
