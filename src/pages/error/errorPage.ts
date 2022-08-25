@@ -1,4 +1,5 @@
-import Component from "core/component";
+import { Component } from "core";
+import { withRouter, withStore } from "../../components/hoc";
 
 interface ErrorPageProps {
   errorText?: string;
@@ -31,3 +32,4 @@ export class ErrorPage extends Component {
     `;
   }
 }
+export default withRouter(withStore(ErrorPage));

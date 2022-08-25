@@ -1,4 +1,4 @@
-import Component from "core/component";
+import { Component } from "core";
 import Handlebars, { HelperOptions } from "handlebars";
 
 interface ComponentConstructable<Props = any> {

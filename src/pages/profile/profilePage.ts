@@ -1,7 +1,8 @@
-import Component from "core/component";
+import { Component } from "core";
 import { ValidationField, validateData } from "utils/validator";
 import { getValuesFromElements } from "utils/dom";
 import { User } from "types/user";
+import { withRouter, withStore } from "../../components/hoc";
 
 export class ProfilePage extends Component {
   static componentName = "ProfilePage";
@@ -76,3 +77,4 @@ export class ProfilePage extends Component {
         </main>`;
   }
 }
+export default withRouter(withStore(ProfilePage));

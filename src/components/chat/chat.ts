@@ -1,4 +1,4 @@
-import Component from "core/component";
+import { Component } from "core";
 
 export interface ChatProps {
   chatName: string;

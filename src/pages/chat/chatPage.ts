@@ -1,9 +1,10 @@
-import Component from "core/component";
+import { Component } from "core";
 import { ValidationField, validateData } from "utils/validator";
 import { getValuesFromElements } from "utils/dom";
 import { ChatProps } from "components/chat/chat";
 import { MessageProps } from "components/message/message";
 import { User } from "types/user";
+import { withRouter, withStore } from "components/hoc";
 import {
   toggleOptionsWindow,
   toggleAttachWindow,
@@ -157,3 +158,4 @@ export class ChatPage extends Component {
     `;
   }
 }
+export default withRouter(withStore(ChatPage));

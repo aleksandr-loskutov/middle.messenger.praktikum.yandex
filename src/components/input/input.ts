@@ -1,4 +1,4 @@
-import Component from "core/component";
+import { Component } from "core";
 import "./input.scss";
 
 export interface InputProps {
@@ -32,17 +32,17 @@ export class Input extends Component {
   render(): string {
     // language=hbs
     return `
-        <input 
+        <input
                 name="{{name}}"
                 type="{{type}}"
                 class="{{#if class}}{{class}}
                 {{else}}
                   {{#if layout}}
                       {{#ifEquals layout 'default'}}form-input {{/ifEquals}}{{#ifEquals layout 'profile'}}profile-data__input {{/ifEquals}}
-                  {{else}}form-input 
+                  {{else}}form-input
                   {{/if}}
                 {{/if}}"
-                value="{{value}}" 
+                value="{{value}}"
                 id="{{id}}"
                 placeholder="{{placeholder}}"
                 {{#if disabled}}disabled{{/if}}/>

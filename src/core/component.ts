@@ -9,7 +9,7 @@ export interface ComponentClass<P> extends Function {
   componentName?: string;
 }
 
-export default class Component<P = any> {
+export class Component<P = any> {
   static EVENTS = {
     INIT: "init",
     FLOW_CDM: "flow:component-did-mount",

@@ -1,1 +1,2 @@
-export { PasswordChangePage as default } from "./passwordChangePage";
+import PasswordChangePage from "./passwordChangePage";
+export default PasswordChangePage;

@@ -1,1 +1,2 @@
-export { RegisterPage as default } from "./registerPage";
+import RegisterPage from "./registerPage";
+export default RegisterPage;

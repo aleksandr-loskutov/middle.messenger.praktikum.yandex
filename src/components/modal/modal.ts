@@ -1,5 +1,5 @@
 import { ControlledInputProps } from "components/controlled-input/controlledInput";
-import Component from "core/component";
+import { Component } from "core";
 import "./modal.scss";
 
 interface ModalProps extends ControlledInputProps {

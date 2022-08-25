@@ -1,5 +1,5 @@
 import { validator } from "utils/validator";
-import Component from "core/component";
+import { Component } from "core";
 import { InputProps } from "../input/input";
 import { ValidationField } from "utils/validator";
 

@@ -1,4 +1,4 @@
-import Component from "core/component";
+import { Component } from "core";
 import "./message.scss";
 
 export interface MessageProps {

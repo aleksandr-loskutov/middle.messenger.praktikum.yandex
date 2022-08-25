@@ -1,6 +1,13 @@
+import { APIError } from "api/types";
+
+export function hasError(response: any): response is APIError {
+  return response && response.reason;
+}
+
 export function isEqual(lhs: string, rhs: string): boolean {
   return lhs === rhs;
 }
+
 type StringIndexed = Record<string, any>;
 
 export function queryStringify(data: StringIndexed): string | never {

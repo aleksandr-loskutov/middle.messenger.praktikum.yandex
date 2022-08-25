@@ -1,7 +1,8 @@
-import Component from "core/component";
+import { Component } from "core";
 import { ValidationField, validateData } from "utils/validator";
 import { getValuesFromElements } from "utils/dom";
 import { User } from "types/user";
+import { withRouter, withStore } from "../../components/hoc";
 
 export class PasswordChangePage extends Component {
   static componentName = "PasswordChangePage";
@@ -57,3 +58,4 @@ export class PasswordChangePage extends Component {
         </main>`;
   }
 }
+export default withRouter(withStore(PasswordChangePage));
