@@ -1,4 +1,4 @@
-import { queryStringify } from "utils/queryStringify";
+import { queryStringify } from "utils/helpers";
 
 const METHODS = {
   GET: "GET",
@@ -7,13 +7,13 @@ const METHODS = {
   DELETE: "DELETE"
 };
 
-class HTTPTransport {
+export class HttpService {
+  constructor(private endPoint: string) {}
+
   get = (url: string, options = {}) => {
-    return this.request(
-      url,
-      { ...options, method: METHODS.GET },
-      options.timeout
-    );
+    const dataUrl = options.data !== undefined ?? queryStringify(options.data);
+    const getUrl = dataUrl ? `${url}${dataUrl}` : url;
+    return this.request(getUrl, { ...options, method: METHODS.GET });
   };
 
   post = (url: string, options = {}) => {
@@ -42,7 +42,7 @@ class HTTPTransport {
 
   request = (url: string, options = {}, timeout = 5000) => {
     const { headers = {}, method, data } = options;
-
+    const fullUrl = `${process.env.API_ENDPOINT}${this.endPoint}${url}`;
     return new Promise(function (resolve, reject) {
       if (!method) {
         reject("No method");
@@ -50,39 +50,45 @@ class HTTPTransport {
       }
 
       const xhr = new XMLHttpRequest();
-      const isGet = method === METHODS.GET;
-
-      xhr.open(method, isGet && !!data ? `${url}${queryStringify(data)}` : url);
+      xhr.responseType = "json";
+      xhr.open(method, fullUrl);
 
       Object.keys(headers).forEach((key) => {
         xhr.setRequestHeader(key, headers[key]);
       });
 
       xhr.onload = function () {
-        resolve(xhr);
+        if ((xhr.status >= 400 && xhr.status < 500) || xhr.status === 200) {
+          resolve(xhr.response);
+        } else {
+          reject(xhr.response);
+        }
       };
 
+      xhr.withCredentials = true;
       xhr.onabort = reject;
       xhr.onerror = reject;
-
       xhr.timeout = timeout;
       xhr.ontimeout = reject;
-
-      if (isGet || !data) {
+      if (method === METHODS.GET || !data) {
         xhr.send();
       } else {
-        xhr.send(data);
+        if (data instanceof FormData) {
+          xhr.send(data);
+        } else {
+          xhr.send(JSON.stringify(data));
+        }
       }
     });
   };
 }
-function fetchWithRetry(url: string, options): Promise<any> {
+export function fetchWithRetry(url: string, options, endPoint): Promise<any> {
   return new Promise((resolve, reject) => {
     let retry = options.retries || 2;
     const retryLimit = 3;
     const retryDelay = 1000;
     const fetch = () => {
-      new HTTPTransport()
+      new HttpService(endPoint)
         .get(url, options)
         .then(resolve)
         .catch(() => {
