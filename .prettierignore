@@ -3,3 +3,6 @@ build
 dist
 node_modules
 workflows
+
+# Ignore files:
+src/pages/profile/profilePage.ts

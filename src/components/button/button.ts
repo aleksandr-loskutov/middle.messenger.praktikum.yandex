@@ -6,6 +6,7 @@ interface ButtonProps {
   type?: "button" | "submit" | "reset";
   className?: string;
   onClick?: () => void;
+  disabled?: boolean;
   text?: string;
   span?: string;
   spanClass?: string;
@@ -22,7 +23,7 @@ export class Button extends Component {
     // language=hbs
     return `
         <div class="{{#if wrapperClass}}{{wrapperClass}}{{else}}button-wrapper{{/if}}">
-          <button  id="{{id}}" type="{{#if type}}{{type}}{{else}}button{{/if}}" class="{{#if class}}{{class}}{{else}}button{{/if}}">
+          <button {{#if id}}id="{{id}}"{{/if}} type="{{#if type}}{{type}}{{else}}button{{/if}}" class="{{#if class}}{{class}}{{else}}button{{/if}}" {{#if disabled}}disabled{{/if}}>
           {{#if text}}
               {{text}}
           {{else}}

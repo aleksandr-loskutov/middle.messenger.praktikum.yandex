@@ -9,7 +9,8 @@ declare global {
   export type AppState = {
     appIsInited: boolean;
     isLoading: boolean;
-    loginError: string | null;
+    formError: string | null;
+    formSuccess: string | null;
     user: User | null;
   };
 
