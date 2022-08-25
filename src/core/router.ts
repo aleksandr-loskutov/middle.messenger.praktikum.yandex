@@ -1,105 +1,112 @@
+import { Component, ComponentClass, render } from "core";
 import { isEqual } from "utils/helpers";
-import render from "core/render";
+type props = Record<string, any>;
 
-class Route {
-  constructor(pathname, view, props) {
-    this._pathname = pathname;
-    this._blockClass = view;
-    this._block = null;
-    this._props = props;
+class Route<P = any> {
+  #pathname: string;
+  #componentClass: ComponentClass<P>;
+  #component: Component | null = null;
+  #props: props;
+  #isPostfixId: boolean | undefined;
+
+  constructor(pathname: string, view: ComponentClass<P>, props: props) {
+    this.#isPostfixId = pathname.includes(":id");
+    this.#pathname = pathname.replace("/:id", "");
+    this.#componentClass = view;
+    this.#props = props;
   }
-
-  navigate(pathname) {
+  navigate(pathname: string) {
     if (this.match(pathname)) {
-      this._pathname = pathname;
       this.render();
     }
   }
-
   leave() {
-    if (this._block) {
-      this._block.hide();
+    if (this.#component) {
+      this.#component.hide();
+      this.#component = null;
     }
   }
-
-  match(pathname) {
-    return isEqual(pathname, this._pathname);
+  match(pathname: string) {
+    if (this.#isPostfixId) {
+      pathname = pathname.replace(/\/\d+/, "").replace(/\/$/, "");
+    }
+    return isEqual(pathname, this.#pathname);
   }
-
+  #prefixHandler() {
+    return Number(window.location.pathname.replace(/[a-zA-Z/]+/, ""));
+  }
   render() {
-    if (!this._block) {
-      this._block = new this._blockClass(this._props);
-      render(this._block);
+    const id = this.#prefixHandler();
+    if (!this.#component) {
+      this.#component = new this.#componentClass({
+        ...this.#props,
+        idParam: id
+      });
+      render(this.#component);
       return;
     }
 
-    this._block.show();
+    this.#component.setProps({ idParam: id });
+    this.#component.show();
   }
 }
 
 export class Router {
-  constructor(rootQuery = "#root") {
+  static __instance: Router;
+  #routes: Array<Route> = [];
+  #history: History = window.history;
+  #currentRoute: Route | null = null;
+
+  constructor() {
     if (Router.__instance) {
       return Router.__instance;
     }
 
-    this.routes = [];
-    this.history = window.history;
-    this._currentRoute = null;
-    this._rootQuery = rootQuery;
-
     Router.__instance = this;
   }
+  use<P>(pathname: string, block: ComponentClass<P>, props: props = {}) {
+    const route = new Route(pathname, block, props);
 
-  use(pathname, block, props = {}) {
-    const route = new Route(pathname, block, {
-      ...props,
-      rootQuery: this._rootQuery,
-      router: this
-    });
-    this.routes.push(route);
+    this.#routes.push(route);
 
     return this;
   }
-
   start() {
-    window.onpopstate = function (event) {
-      this._onRoute(event.currentTarget.location.pathname);
-    }.bind(this);
+    window.onpopstate = (event) => {
+      this._onRoute(event.currentTarget?.location.pathname);
+    };
 
     this._onRoute(window.location.pathname);
   }
 
-  _onRoute(pathname) {
+  _onRoute(pathname: string) {
     const route = this.getRoute(pathname);
     if (!route) {
       return;
     }
 
-    if (this._currentRoute && this._currentRoute !== route) {
-      this._currentRoute.leave();
+    if (this.#currentRoute && this.#currentRoute !== route) {
+      this.#currentRoute.leave();
     }
 
-    this._currentRoute = route;
-    route.render(route, pathname);
+    this.#currentRoute = route;
+    route.render();
   }
-
-  go(pathname) {
-    this.history.pushState({}, "", pathname);
+  go(pathname: string) {
+    this.#history.pushState({}, "", pathname);
     this._onRoute(pathname);
   }
-
   back() {
-    this.history.back();
+    this.#history.back();
   }
 
   forward() {
-    this.history.forward();
+    this.#history.forward();
   }
 
-  getRoute(pathname) {
-    const route = this.routes.find((route) => route.match(pathname));
-    const errorRoute = this.routes.find((route) => route.match("*"));
+  getRoute(pathname: string): Route | undefined {
+    const route = this.#routes.find((route) => route.match(pathname));
+    const errorRoute = this.#routes.find((route) => route.match("*"));
     return route || errorRoute;
   }
 }
