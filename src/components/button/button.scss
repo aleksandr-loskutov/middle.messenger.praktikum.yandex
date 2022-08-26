@@ -19,3 +19,8 @@
 .button:hover {
   background: var(--blue-hover);
 }
+
+.button:disabled {
+  background: var(--gray);
+  cursor: not-allowed;
+}

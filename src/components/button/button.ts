@@ -23,7 +23,7 @@ export class Button extends Component {
     // language=hbs
     return `
         <div class="{{#if wrapperClass}}{{wrapperClass}}{{else}}button-wrapper{{/if}}">
-          <button {{#if id}}id="{{id}}"{{/if}} type="{{#if type}}{{type}}{{else}}button{{/if}}" class="{{#if class}}{{class}}{{else}}button{{/if}}" {{#if disabled}}disabled{{/if}}>
+          <button {{#if id}}id="{{id}}"{{/if}} type="{{#if type}}{{type}}{{else}}button{{/if}}" class="{{#if class}}{{class}}{{else}}button{{/if}}" {{#if disabled}}disabled="disabled"{{/if}}>
           {{#if text}}
               {{text}}
           {{else}}
