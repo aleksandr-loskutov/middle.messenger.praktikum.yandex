@@ -46,3 +46,9 @@ export function queryStringify(data: StringIndexed): string | never {
     return `${result}${key}=${value}${endLine}`;
   }, "");
 }
+
+export function logger(message: string, data?: object) {
+  if (process.env.DEBUG) {
+    console.log(message, data);
+  }
+}
