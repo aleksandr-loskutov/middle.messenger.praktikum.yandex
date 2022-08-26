@@ -3,5 +3,6 @@ export const defaultState: AppState = {
   isLoading: false,
   formError: null,
   formSuccess: null,
-  user: null
+  user: null,
+  chats: null
 };

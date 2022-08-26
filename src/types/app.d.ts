@@ -1,4 +1,5 @@
 import { Store, Router } from "core";
+import { Chat } from "./api";
 
 declare global {
   export type Nullable<T> = T | null;
@@ -12,6 +13,7 @@ declare global {
     formError: string | null;
     formSuccess: string | null;
     user: User | null;
+    chats: Chat[] | null;
   };
 
   export type User = {
