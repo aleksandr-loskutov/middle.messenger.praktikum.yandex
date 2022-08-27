@@ -7,7 +7,7 @@ import Message from "./message";
 import Modal from "./modal";
 import Image from "./image";
 import Link from "./link";
-
+import ChatBox from "./chat-box";
 export default {
   Button,
   Input,
@@ -17,5 +17,6 @@ export default {
   Modal,
   Error,
   Image,
-  Link
+  Link,
+  ChatBox
 };
