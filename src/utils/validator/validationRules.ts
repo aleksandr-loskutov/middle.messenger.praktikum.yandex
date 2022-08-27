@@ -116,6 +116,11 @@ export const messageRule = {
     }
   }
 };
+export const chatTitleRule = {
+  chat_title: {
+    isRequired: { message: "Введите название чата" }
+  }
+};
 
 export const validationRules = {
   ...loginRule,
@@ -129,7 +134,8 @@ export const validationRules = {
   ...phoneRule,
   ...firstNameRule,
   ...secondNameRule,
-  ...messageRule
+  ...messageRule,
+  ...chatTitleRule
 };
 
 export enum ValidationField {
@@ -145,5 +151,6 @@ export enum ValidationField {
   SecondName = "second_name",
   DisplayName = "display_name",
   Phone = "phone",
-  Message = "message"
+  Message = "message",
+  ChatTitle = "chat_title"
 }

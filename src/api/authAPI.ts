@@ -1,18 +1,18 @@
 import { BaseAPI } from "./baseAPI";
-import { LoginData, RegisterData } from "types/api";
+import { LoginDTO, RegisterDTO } from "types/api";
 
 export class AuthAPI extends BaseAPI {
   constructor() {
     super("/auth");
   }
 
-  login(data: LoginData): Promise<unknown> {
+  login(data: LoginDTO): Promise<unknown> {
     return this.httpService.post("/signin", {
       data,
       headers: { "Content-Type": "application/json" }
     });
   }
-  register(data: RegisterData): Promise<unknown> {
+  register(data: RegisterDTO): Promise<unknown> {
     return this.httpService.post("/signup", {
       data,
       headers: { "Content-Type": "application/json" }

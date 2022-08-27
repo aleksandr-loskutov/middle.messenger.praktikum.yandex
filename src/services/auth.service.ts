@@ -2,8 +2,8 @@ import { AuthAPI } from "api";
 import type { Dispatch } from "core";
 import { transformUser, apiHasError } from "utils";
 import {
-  LoginData as LoginPayload,
-  RegisterData as RegisterPayload
+  LoginDTO as LoginPayload,
+  RegisterDTO as RegisterPayload
 } from "types/api";
 
 export const login = async (

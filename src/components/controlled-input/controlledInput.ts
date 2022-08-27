@@ -56,7 +56,7 @@ export class ControlledInput extends Component {
                   id=id
                   layout=layout
                   type=type
-                  ref="input"
+                  ref=ref
                   name=name
                   placeholder=placeholder
                   value=value
@@ -76,7 +76,7 @@ export class ControlledInput extends Component {
                         id=id
                         layout=layout
                         type=type
-                        ref="input"
+                        ref=ref
                         name=name
                         placeholder=placeholder
                         value=value
