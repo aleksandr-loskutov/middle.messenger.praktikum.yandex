@@ -2,10 +2,13 @@ import { Component } from "core";
 import { ValidationField, validateData } from "utils/validator";
 import { getValuesFromElements } from "utils/dom";
 import { User } from "types/user";
-import { withRouter, withStore } from "../../components/hoc";
+import { withRouter, withStore } from "components/hoc";
+import { updateUserPassword } from "services";
+import { logger, transformPasswords } from "utils";
 
 export class PasswordChangePage extends Component {
   static componentName = "PasswordChangePage";
+
   constructor(props: { user: User }) {
     super({
       ...props,
@@ -17,12 +20,21 @@ export class PasswordChangePage extends Component {
           "new_password_confirm"
         );
         if (validateData.bind(this)(userPasswords)) {
-          console.log("Пароли:", userPasswords);
+          logger("Пароли пользователя:", userPasswords);
+          this.props.store.dispatch(
+            updateUserPassword,
+            transformPasswords(userPasswords)
+          );
         }
       },
       onBackButtonClick: () => {
         this.props.router.back();
       }
+    });
+    this.setProps({
+      formError: () => this.props.store.getState().formError,
+      formSuccess: () => this.props.store.getState().formSuccess,
+      isLoading: () => this.props.store.getState().isLoading
     });
   }
 
@@ -48,8 +60,9 @@ export class PasswordChangePage extends Component {
                             {{{ControlledInput layout="profile" type="password" name="password" ref="password" id="password" label="Текущий пароль" placeholder="****"  validationField = "${ValidationField.Password}"}}}
                             {{{ControlledInput layout="profile" type="password" name="new_password" ref="new_password" id="new_password" label="Новый пароль" placeholder="****" validationField = "${ValidationField.NewPassword}"}}}
                             {{{ControlledInput layout="profile" type="password" name="new_password_confirm" ref="new_password_confirm" id="new_password_confirm" label="Новый пароль повторно" placeholder="****" validationField = "${ValidationField.NewPasswordConfirm}"}}}
+                            {{{Error errorText=formError successText=formSuccess}}}
                             <div class="profile-data__row">
-                                {{{Button type="submit" text="Сохранить" id="update-user-password" onClick=onChangePassword}}}
+                                {{{Button type="submit" text="Сохранить" id="update-user-password" onClick=onChangePassword disabled=isLoading}}}
                             </div>
                         </div>
                     </form>
