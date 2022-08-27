@@ -1,39 +1,39 @@
 import { Component } from "core";
-
-export interface ChatProps {
-  chatName: string;
-  userAvatar: string;
-  userMessage?: boolean;
-  messageText?: string;
-  messageTime: string;
-  isChatActive: boolean;
-  chatUnreadMessages: number;
-}
+import { ChatDTO } from "types/api";
+import { displayDate } from "utils/helpers";
 
 export class Chat extends Component {
   static componentName = "Chat";
-  constructor({ chat }: { chat: ChatProps }) {
-    super({ ...chat });
+  constructor({ chat, onClick, ...rest }: { chat: ChatDTO }) {
+    super({
+      events: { click: onClick },
+      ...chat,
+      last_message: chat.last_message
+        ? {
+            ...chat.last_message,
+            simpleDate: displayDate(chat.last_message.time)
+          }
+        : null,
+      ...rest
+    });
   }
 
   render(): string {
     // language=hbs
     return `
         {{#if isChatActive}}
-            <li class="sidebar__chat-item chat-active">
+            <li class="sidebar__chat-item chat-active" >
         {{else}}
             <li class="sidebar__chat-item">
         {{/if}}
-        {{#if userAvatar}}
-                <img class="chat-item__avatar avatar avatar-normal"  src={{userAvatar}} alt="аватар {{chatName}}."/>
-        {{else}}
-
+            <img class="chat-item__avatar avatar avatar-normal"  src={{avatar}} alt="аватар {{title}}."/>
+            <span class="chat-item__chat-name">{{title}}</span>
+        {{#if last_message}}
+            <time class="chat-item__message-time" datetime="{{last_message.time}}">{{last_message.simpleDate}}</time>
+            <span class="chat-item__message-text"> {{last_message.content}} </span>
         {{/if}}
-            <span class="chat-item__chat-name">{{chatName}}</span>
-            <time class="chat-item__message-time" datetime="{{messageTime}}+03:00">{{messageTime}}</time>
-            <span class="chat-item__message-text">{{#if userMessage}} Вы: {{/if}} {{messageText}} </span>
-        {{#if chatUnreadMessages}}
-                <span class="chat-item__message-status">{{chatUnreadMessages}}</span>
+        {{#if unread_count}}
+                <span class="chat-item__message-status">{{unread_count}}</span>
         {{/if}}
         </li>
     `;
