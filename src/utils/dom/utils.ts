@@ -8,33 +8,17 @@ export function toggleAttachWindow() {
   document.getElementById("attach-options").classList.toggle("hidden");
 }
 
-export function addUserModal() {
-  const modal = document.getElementById("modal-add-user");
-  modal.style.display = "block";
-}
-export function deleteUserModal() {
-  const modalDeleteUser = document.getElementById("modal-delete-user");
-  modalDeleteUser.style.display = "block";
-}
-//TODO переработать
-export function addListeners() {
-  window.onclick = function (event) {
-    if (window.location.pathname === "/chat") {
-      const modalAddUser = document.getElementById("modal-add-user");
-      const modalDeleteUser = document.getElementById("modal-delete-user");
-      if (modalAddUser || modalDeleteUser) {
-        if (event.target.classList.contains("modal__wrapper")) {
-          modalAddUser.style.display = "none";
-          modalDeleteUser.style.display = "none";
-        }
-      }
-    }
-    if (window.location.pathname === "/profile") {
-      const personalImage = document.getElementById("user-avatar");
-      const input = document.getElementById("avatar");
-      personalImage.addEventListener("click", () => {
-        input.click();
-      });
+export function createModalToggler(modalId: string) {
+  const _modalId = modalId;
+
+  return (event) => {
+    const { target } = event;
+    if (target.classList.contains("modal__wrapper")) {
+      const { parentElement } = target;
+      parentElement.classList.toggle("hidden");
+    } else {
+      const el = document.getElementById(_modalId) as HTMLElement;
+      el.classList.contains("hidden") && el.classList.toggle("hidden");
     }
   };
 }
