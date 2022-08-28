@@ -48,8 +48,8 @@ export function queryStringify(data: StringIndexed): string | never {
 }
 
 export function logger(message: string, data?: object) {
-  if (process.env.DEBUG) {
-    console.log(message, data);
+  if (process.env.DEBUG === "true") {
+    console.log(message, data || "");
   }
 }
 
@@ -113,13 +113,7 @@ export function displayDate(data) {
       const hourDif = dateNow.getHours() - date.getHours();
       if (hourDif === 0) {
         const minutesDif = dateNow.getMinutes() - date.getMinutes();
-
-        if (minutesDif >= 0 && minutesDif < 5) return "1 минуту назад";
-        if (minutesDif >= 5 && minutesDif < 10) return "5 минут назад";
-        if (minutesDif >= 10 && minutesDif < 30) {
-          return "10 минут назад";
-        }
-        return "30 минут назад";
+        if (minutesDif >= 0 && minutesDif < 1) return "сейчас";
       }
       return `${date.getHours()}:${date.getMinutes()}`;
     }
@@ -140,4 +134,131 @@ export function setDefaultAvatars(chats: any[]) {
     }
   });
   return chats;
+}
+
+export function cloneDeep<T extends object = object>(obj: T) {
+  return (function _cloneDeep(
+    item: T
+  ): T | Date | Set<unknown> | Map<unknown, unknown> | object | T[] {
+    // Handle:
+    // * null
+    // * undefined
+    // * boolean
+    // * number
+    // * string
+    // * symbol
+    // * function
+    if (item === null || typeof item !== "object") {
+      return item;
+    }
+
+    // Handle:
+    // * Date
+    if (item instanceof Date) {
+      return new Date(item.valueOf());
+    }
+
+    // Handle:
+    // * Array
+    if (item instanceof Array) {
+      let copy = [];
+
+      item.forEach((_, i) => (copy[i] = _cloneDeep(item[i])));
+
+      return copy;
+    }
+
+    // Handle:
+    // * Set
+    if (item instanceof Set) {
+      let copy = new Set();
+
+      item.forEach((v) => copy.add(_cloneDeep(v)));
+
+      return copy;
+    }
+
+    // Handle:
+    // * Map
+    if (item instanceof Map) {
+      let copy = new Map();
+
+      item.forEach((v, k) => copy.set(k, _cloneDeep(v)));
+
+      return copy;
+    }
+
+    // Handle:
+    // * Object
+    if (item instanceof Object) {
+      let copy: object = {};
+
+      // Handle:
+      // * Object.symbol
+      Object.getOwnPropertySymbols(item).forEach(
+        (s) => (copy[s] = _cloneDeep(item[s]))
+      );
+
+      // Handle:
+      // * Object.name (other)
+      Object.keys(item).forEach((k) => (copy[k] = _cloneDeep(item[k])));
+
+      return copy;
+    }
+
+    throw new Error(`Unable to copy object: ${item}`);
+  })(obj);
+}
+
+export function connectWebSocket(url: string) {
+  return new Promise(function (resolve, reject) {
+    const server = new WebSocket(url);
+
+    server.onopen = function () {
+      logger("Соединение установлено.");
+
+      server.addEventListener("error", (event) => {
+        logger("Ошибка", event.message);
+      });
+
+      server.addEventListener("close", (event) => {
+        if (event.wasClean) {
+          logger("Соединение закрыто чисто");
+        } else {
+          logger("Обрыв соединения");
+        }
+        logger(`Код: ${event.code} | Причина: ${event.reason}`);
+      });
+
+      const ping = () => {
+        if (!server) return;
+        if (server.readyState !== 1) return;
+        server.send(
+          JSON.stringify({
+            type: "ping"
+          })
+        );
+        setTimeout(ping, 5000);
+      };
+
+      ping();
+      resolve(server);
+    };
+    server.onerror = function (err) {
+      logger("Ошибка", err.message);
+      reject(err);
+    };
+  });
+}
+
+export function fileToFormData(file: File): FormData {
+  const formData = new FormData();
+  formData.append("avatar", file, file.name);
+  return formData;
+}
+
+export function sanitizeHTML(str) {
+  return str.replace(/[^\w. ]/gi, function (c) {
+    return "&#" + c.charCodeAt(0) + ";";
+  });
 }

@@ -8,6 +8,12 @@ export function toggleAttachWindow() {
   document.getElementById("attach-options").classList.toggle("hidden");
 }
 
+export function clickOnAvatarInput() {
+  //временное решение
+  const el = document.getElementById("avatar") as HTMLInputElement;
+  el.click();
+}
+
 export function createModalToggler(modalId: string) {
   const _modalId = modalId;
 
