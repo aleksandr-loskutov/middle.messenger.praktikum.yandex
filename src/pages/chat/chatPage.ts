@@ -1,7 +1,7 @@
 import { Component } from "core";
 import { ValidationField, validateData } from "utils/validator";
 import { withRouter, withStore } from "components/hoc";
-import { logger, sanitizeHTML } from "utils";
+import { logger, sanitizeString } from "utils";
 import { createChat, searchAndAddOrDeleteUserFromChat } from "services";
 import { connectToChat } from "services/message.service";
 import {
@@ -28,7 +28,7 @@ export class ChatPage extends Component {
       onSendMessage: (e: PointerEvent) => {
         e.preventDefault();
         const messageData = getValuesFromElements.bind(this)("message");
-        messageData.message = sanitizeHTML(messageData.message.trim());
+        messageData.message = sanitizeString(messageData.message.trim());
         if (validateData.bind(this)(messageData)) {
           logger("Сообщение:", messageData);
           const { socket } = this.props;

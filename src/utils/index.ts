@@ -5,6 +5,6 @@ export {
   logger,
   connectWebSocket,
   fileToFormData,
-  sanitizeHTML
+  sanitizeString
 } from "./helpers";
 export { transformUser, transformPasswords } from "./apiTransformers";

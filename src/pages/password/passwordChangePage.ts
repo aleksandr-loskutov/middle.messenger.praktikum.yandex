@@ -34,11 +34,14 @@ export class PasswordChangePage extends Component {
     this.setProps({
       formError: () => this.props.store.getState().formError,
       formSuccess: () => this.props.store.getState().formSuccess,
-      isLoading: () => this.props.store.getState().isLoading
+      isLoading: () => this.props.store.getState().isLoading,
+      avatar: () => this.props.store.getState().user?.avatar
     });
   }
 
   render(): string {
+    const { user } = this.props.store.getState();
+    const avatar = process.env.RESOURCES_URL + user?.avatar;
     // language=hbs
     return `
         <main class="main-chat">
@@ -49,9 +52,7 @@ export class PasswordChangePage extends Component {
                         <div class="profile-data__avatar-container">
                             <div class="personal-image">
                                 <figure class="personal-figure">
-                                {{#if user.avatar}}
-                                    {{{Image type="img" class="personal-avatar no-pointer" src=user.avatar}}}
-                                {{/if}}
+                                    {{#if avatar}}{{{Image type="img" class="personal-avatar no-pointer" src="${avatar}"}}}{{/if}}
                                 </figure>
                             </div>
                             <h1 class="profile-data__user-title">{{user.name}}</h1>

@@ -2,6 +2,7 @@ import { ChatAPI } from "api";
 import type { Dispatch } from "core";
 import { apiHasError, logger, connectWebSocket } from "utils";
 
+//todo полный рефакторинг
 export async function connectToChat(
   dispatch: Dispatch<AppState>,
   state: AppState
@@ -12,7 +13,7 @@ export async function connectToChat(
 
   if (!userId || !chatId) {
     logger(
-      `Не указан идентификатор пользователя или чата. Подключение не выполнено.`
+      "Не указан идентификатор пользователя или чата. Подключение не выполнено."
     );
     dispatch({ isLoading: false });
     return;
@@ -46,11 +47,11 @@ export async function connectToChat(
 
       if (!Array.isArray(data) && data) {
         const { type, content } = data;
+        const messages = this.props.store.getState().chatMessages;
 
         switch (type) {
           case "message":
             logger("Получено новое сообщение в чате", content);
-            const messages = this.props.store.getState().chatMessages;
             dispatch({
               isLoading: false,
               chatMessages: [data, ...messages]
@@ -72,6 +73,7 @@ export async function connectToChat(
       }
     });
 
+    //временное решение
     this.setProps({ socket });
   } catch (error) {
     logger("Ошибка в работе с вебсокетом", error);

@@ -85,6 +85,7 @@ export class Component<P = any> {
     this.eventBus().destroy();
     this.componentWillUnmount();
   }
+  //eslint-disable-next-line
   componentWillUnmount() {}
 
   private _componentDidUpdate(oldProps: P, newProps: P) {
@@ -225,7 +226,7 @@ export class Component<P = any> {
       /**
        * Ищем элемент layout-а, куда вставлять детей
        */
-      const layoutContent = content.querySelector('[data-layout="1"]');
+      const layoutContent = content.querySelector("[data-layout=\"1\"]");
       if (layoutContent && stubChilds.length) {
         layoutContent.append(...stubChilds);
       }

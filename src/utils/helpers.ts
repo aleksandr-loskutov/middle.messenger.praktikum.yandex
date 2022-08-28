@@ -133,7 +133,7 @@ export function setDefaultAvatars(chats: any[]) {
       chat.avatar = createImageFromInitials(100, chat.title);
     }
   });
-  return chats;
+  return chats || [];
 }
 
 export function cloneDeep<T extends object = object>(obj: T) {
@@ -161,7 +161,7 @@ export function cloneDeep<T extends object = object>(obj: T) {
     // Handle:
     // * Array
     if (item instanceof Array) {
-      let copy = [];
+      const copy = [];
 
       item.forEach((_, i) => (copy[i] = _cloneDeep(item[i])));
 
@@ -171,7 +171,7 @@ export function cloneDeep<T extends object = object>(obj: T) {
     // Handle:
     // * Set
     if (item instanceof Set) {
-      let copy = new Set();
+      const copy = new Set();
 
       item.forEach((v) => copy.add(_cloneDeep(v)));
 
@@ -181,7 +181,7 @@ export function cloneDeep<T extends object = object>(obj: T) {
     // Handle:
     // * Map
     if (item instanceof Map) {
-      let copy = new Map();
+      const copy = new Map();
 
       item.forEach((v, k) => copy.set(k, _cloneDeep(v)));
 
@@ -191,7 +191,7 @@ export function cloneDeep<T extends object = object>(obj: T) {
     // Handle:
     // * Object
     if (item instanceof Object) {
-      let copy: object = {};
+      const copy: object = {};
 
       // Handle:
       // * Object.symbol
@@ -257,8 +257,7 @@ export function fileToFormData(file: File): FormData {
   return formData;
 }
 
-export function sanitizeHTML(str) {
-  return str.replace(/[^\w. ]/gi, function (c) {
-    return "&#" + c.charCodeAt(0) + ";";
-  });
+//todo переделать
+export function sanitizeString(str) {
+  return str.replace(/[^a-zA-Zа-яА-ЯёЁ0-9 ]/g, "");
 }

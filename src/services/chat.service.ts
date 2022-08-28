@@ -2,6 +2,7 @@ import { ChatAPI } from "api";
 import type { Dispatch } from "core";
 import { apiHasError, logger } from "utils";
 import { ChatDTO, CreateChatDTO } from "types/api";
+import { setDefaultAvatars } from "utils/helpers";
 
 export const getChats = async (
   dispatch: Dispatch<AppState>,
@@ -40,6 +41,6 @@ export const createChat = async (
     isLoading: false,
     formError: null,
     formSuccess: "Чат успешно создан",
-    chats: chats as ChatDTO[]
+    chats: setDefaultAvatars(chats) as ChatDTO[]
   });
 };
