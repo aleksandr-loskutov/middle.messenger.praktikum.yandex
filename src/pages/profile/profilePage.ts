@@ -5,6 +5,7 @@ import { User } from "types/user";
 import { withRouter, withStore } from "components/hoc";
 import { logout, updateUserAvatar, updateUserData } from "services";
 import { logger } from "utils";
+import { RESOURCES_URL } from "utils/consts";
 
 export class ProfilePage extends Component {
   static componentName = "ProfilePage";
@@ -61,7 +62,7 @@ export class ProfilePage extends Component {
 
   render(): string {
     const { user } = this.props.store.getState();
-    const avatar = process.env.RESOURCES_URL + user?.avatar ;
+    const avatar = RESOURCES_URL + user?.avatar ;
 
     // language=hbs
     return `

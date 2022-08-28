@@ -1,4 +1,5 @@
 import { queryStringify } from "utils/helpers";
+import { API_ENDPOINT } from "utils/consts";
 
 const METHODS = {
   GET: "GET",
@@ -42,7 +43,7 @@ export class HttpService {
 
   request = (url: string, options = {}, timeout = 5000) => {
     const { headers = {}, method, data } = options;
-    const fullUrl = `${process.env.API_ENDPOINT}${this.endPoint}${url}`;
+    const fullUrl = `${API_ENDPOINT}${this.endPoint}${url}`;
     return new Promise(function (resolve, reject) {
       if (!method) {
         reject("No method");

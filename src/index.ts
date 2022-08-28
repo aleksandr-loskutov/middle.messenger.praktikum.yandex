@@ -6,6 +6,7 @@ import { Router, Store } from "core";
 import { defaultState } from "./store";
 import { initApp } from "services";
 import { initRouter } from "./router";
+import { DEBUG } from "utils/consts";
 
 Handlebars.registerHelper("ifEquals", function (arg1, arg2, options) {
   return arg1 == arg2 ? options.fn(this) : options.inverse(this);
@@ -28,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   store.on("changed", (prevState, nextState) => {
     router.start();
-    if (process.env.DEBUG) {
+    if (DEBUG) {
       console.log(
         "%cstore updated",
         "background: #222; color: #bada55",

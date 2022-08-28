@@ -1,4 +1,5 @@
 import { APIError } from "types/api";
+import { DEBUG } from "./consts";
 
 export function hasError(response: any): response is APIError {
   return response && response.reason;
@@ -48,7 +49,7 @@ export function queryStringify(data: StringIndexed): string | never {
 }
 
 export function logger(message: string, data?: object) {
-  if (process.env.DEBUG === "true") {
+  if (DEBUG) {
     console.log(message, data || "");
   }
 }

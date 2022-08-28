@@ -5,6 +5,7 @@ import { User } from "types/user";
 import { withRouter, withStore } from "components/hoc";
 import { updateUserPassword } from "services";
 import { logger, transformPasswords } from "utils";
+import { RESOURCES_URL } from "utils/consts";
 
 export class PasswordChangePage extends Component {
   static componentName = "PasswordChangePage";
@@ -41,7 +42,7 @@ export class PasswordChangePage extends Component {
 
   render(): string {
     const { user } = this.props.store.getState();
-    const avatar = process.env.RESOURCES_URL + user?.avatar;
+    const avatar = RESOURCES_URL + user?.avatar;
     // language=hbs
     return `
         <main class="main-chat">
