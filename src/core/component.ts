@@ -1,6 +1,7 @@
 import { EventBus } from "core";
 import { nanoid } from "nanoid";
 import Handlebars from "handlebars";
+import { cloneDeep } from "utils/helpers";
 
 type Events = Values<typeof Component.EVENTS>;
 
@@ -157,7 +158,9 @@ export class Component<P = any> {
       set(target: Record<string, unknown>, prop: string, value: unknown) {
         target[prop] = value;
         // Запускаем обновление компоненты
-        self.eventBus().emit(Component.EVENTS.FLOW_CDU, { ...target }, target);
+        self
+          .eventBus()
+          .emit(Component.EVENTS.FLOW_CDU, cloneDeep(target), target);
         return true;
       },
       deleteProperty() {

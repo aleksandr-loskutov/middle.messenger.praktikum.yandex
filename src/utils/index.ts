@@ -2,6 +2,9 @@ export {
   queryStringify,
   isEqual,
   hasError as apiHasError,
-  logger
+  logger,
+  connectWebSocket,
+  fileToFormData,
+  sanitizeHTML
 } from "./helpers";
 export { transformUser, transformPasswords } from "./apiTransformers";

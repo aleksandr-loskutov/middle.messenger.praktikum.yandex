@@ -19,8 +19,7 @@ export class UserAPI extends BaseAPI {
   }
   updateUserAvatar(data): Promise<unknown> {
     return this.httpService.put("/profile/avatar", {
-      data,
-      headers: { "Content-Type": "application/json" }
+      data
     });
   }
   searchUsers(data): Promise<unknown> {

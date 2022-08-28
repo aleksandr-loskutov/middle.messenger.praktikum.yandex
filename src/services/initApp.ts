@@ -2,7 +2,7 @@ import { AuthAPI, ChatAPI } from "api";
 import { UserDTO, ChatDTO } from "types/api";
 import type { Dispatch } from "core";
 import { transformUser, apiHasError } from "utils";
-import { setDefaultAvatars } from "../utils/helpers";
+import { setDefaultAvatars } from "utils/helpers";
 
 export async function initApp(dispatch: Dispatch<AppState>) {
   try {
@@ -15,7 +15,8 @@ export async function initApp(dispatch: Dispatch<AppState>) {
 
     dispatch({
       user: transformUser(user as UserDTO),
-      chats: setDefaultAvatars(chats) as ChatDTO[]
+      chats: setDefaultAvatars(chats) as ChatDTO[],
+      chatMessages: []
     });
   } catch (err) {
     console.error(err);

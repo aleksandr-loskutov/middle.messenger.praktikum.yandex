@@ -40,13 +40,14 @@ class Route<P = any> {
     if (!this.#component) {
       this.#component = new this.#componentClass({
         ...this.#props,
-        idParam: id
+        idParam: id,
+        _idParam: id
       });
       render(this.#component);
       return;
     }
-
-    this.#component.setProps({ idParam: id });
+    //todo провести тесты с id параметрами и убрать _idParam
+    this.#component.setProps({ idParam: id, _idParam: id });
     this.#component.show();
   }
 }
