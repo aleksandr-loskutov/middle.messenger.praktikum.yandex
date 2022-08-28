@@ -1,5 +1,5 @@
 import { BaseAPI } from "./baseAPI";
-import { CreateChatDTO } from "../types/api";
+import { CreateChatDTO } from "types/api";
 
 export class ChatAPI extends BaseAPI {
   constructor() {
@@ -27,6 +27,11 @@ export class ChatAPI extends BaseAPI {
   removeUsersFromChat(data): Promise<unknown> {
     return this.httpService.delete("/users", {
       data,
+      headers: { "Content-Type": "application/json" }
+    });
+  }
+  getWsTokenForChat(chatId): Promise<unknown> {
+    return this.httpService.post(`/token/${chatId}`, {
       headers: { "Content-Type": "application/json" }
     });
   }
