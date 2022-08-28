@@ -2,6 +2,7 @@ import { ChatAPI, UserAPI } from "api";
 import type { Dispatch } from "core";
 import { transformUser, apiHasError } from "utils";
 import { RegisterDTO as UserDataPayload, UserDTO } from "types/api";
+import { fileToFormData } from "utils";
 
 export const updateUserData = async (
   dispatch: Dispatch<AppState>,
@@ -40,6 +41,40 @@ export const updateUserPassword = async (
     formError: null,
     formSuccess: "Пароль успешно обновлен"
   });
+};
+
+export const updateUserAvatar = async (
+  dispatch: Dispatch<AppState>,
+  state: AppState,
+  payload
+) => {
+  if (state.isLoading) return;
+  dispatch({ isLoading: true, formSuccess: null });
+  const api = new UserAPI();
+  const formData = fileToFormData(payload);
+  const response = await api.updateUserAvatar(formData);
+  if (apiHasError(response)) {
+    dispatch({ isLoading: false, formError: response.reason });
+    return;
+  }
+
+  const { avatar } = response as UserDTO;
+  const { user } = state;
+  if (avatar && user) {
+    dispatch({
+      isLoading: false,
+      formError: null,
+      formSuccess: "Аватар успешно обновлен",
+      user: {
+        ...user,
+        avatar
+      }
+    });
+  } else {
+    dispatch({
+      isLoading: false
+    });
+  }
 };
 
 export const searchAndAddOrDeleteUserFromChat = async (

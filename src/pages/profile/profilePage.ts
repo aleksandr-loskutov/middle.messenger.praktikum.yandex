@@ -1,9 +1,9 @@
 import { Component } from "core";
 import { ValidationField, validateData } from "utils/validator";
-import { getValuesFromElements } from "utils/dom";
+import { getValuesFromElements, clickOnAvatarInput } from "utils/dom";
 import { User } from "types/user";
 import { withRouter, withStore } from "components/hoc";
-import { logout, updateUserData } from "services";
+import { logout, updateUserAvatar, updateUserData } from "services";
 import { logger } from "utils";
 
 export class ProfilePage extends Component {
@@ -30,6 +30,20 @@ export class ProfilePage extends Component {
       onBackButtonClick: () => {
         this.props.router.back();
       },
+        onAvatarClick: () => {
+            clickOnAvatarInput();
+        },
+        onAvatarChange: (e: PointerEvent) => {
+            //todo переработать
+            const avatarInput = document.getElementById("avatar") as HTMLInputElement;
+            avatarInput.onchange = (e) => {
+                const {target} = e;
+                const file = (target as HTMLInputElement)?.files[0];
+                if(file) {
+                    this.props.store.dispatch(updateUserAvatar, file);
+                }
+            }
+        },
       onLogout: () => {
         this.props.store.dispatch(logout);
       },
@@ -46,6 +60,8 @@ export class ProfilePage extends Component {
 
   render(): string {
     const { user } = this.props.store.getState();
+    const avatar = user.avatar ? process.env.RESOURCES_URL + user.avatar : '/static/img/avatar-placeholder.svg';
+
     // language=hbs
     return `
         <main class="main-chat">
@@ -55,13 +71,11 @@ export class ProfilePage extends Component {
                     <form class="profile-data__form">
                         <div class="profile-data__avatar-container">
                             <div class="personal-image">
-                                {{{ControlledInput name="avatar" type="file" id="avatar" }}}
+                                {{{ControlledInput name="avatar" type="file" id="avatar" onChange=onAvatarChange}}}
                                 <figure class="personal-figure">
-                                    {{#if user.avatar}}
-                                        {{{Image type="img" class="personal-avatar" src=user.avatar}}}
-                                    {{/if}}
+                                        {{{Image type="img" class="personal-avatar" src="${avatar}"}}}
                                     <figcaption class="personal-figcaption" id="user-avatar">
-                                        {{{Image type="img" id="avatar-placeholder" src="https://raw.githubusercontent.com/ThiagoLuizNunes/angular-boilerplate/master/src/assets/imgs/camera-white.png" alt="установить avatar."}}}
+                                        {{{Image type="img" id="avatar-placeholder" src="https://raw.githubusercontent.com/ThiagoLuizNunes/angular-boilerplate/master/src/assets/imgs/camera-white.png" alt="установить avatar." onClick=onAvatarClick}}}
                                     </figcaption>
                                 </figure>
                             </div>
