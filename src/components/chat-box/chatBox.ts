@@ -5,12 +5,23 @@ import { withRouter, withStore } from "components/hoc";
 
 class ChatBox extends Component {
   static componentName = "ChatBox";
+
   constructor(props: { chat: ChatDTO }) {
     super(props);
     this.setProps({
       currentChat: this.props.store
         .getState()
-        .chats.find((chat) => chat.id === this.props.idParam)
+        .chats.find((chat) => chat.id === this.props.idParam),
+      messages: () =>
+        this.props.store
+          .getState()
+          .chatMessages.map((message) => {
+            return {
+              ...message,
+              isMine: message.user_id === this.props.store.getState().user.id
+            };
+          })
+          .reverse()
     });
   }
 
@@ -42,7 +53,7 @@ class ChatBox extends Component {
                 <div class="chat-messages">
                     <div class="chat-messages__wrapper">
                         {{#each messages}}
-                            {{{Message message=@this}}}
+                            {{{Message message=this}}}
                         {{/each}}
                     </div>
                 </div>
@@ -76,7 +87,7 @@ class ChatBox extends Component {
                             }}}
                         </div>
                         <div class="action-bar__send">
-                            {{{Button type="submit" id="send-button" class="action-bar__send-button" icon="send" onClick=onSendMessage}}}
+                            {{{Button type="submit" id="send-button" class="action-bar__send-button" icon="send" onClick=onSubmit}}}
                         </div>
                     </form>
                 </div>

@@ -1,8 +1,9 @@
 import { Component } from "core";
 import { ValidationField, validateData } from "utils/validator";
 import { withRouter, withStore } from "components/hoc";
-import { logger } from "utils";
+import { logger, sanitizeHTML } from "utils";
 import { createChat, searchAndAddOrDeleteUserFromChat } from "services";
+import { connectToChat } from "services/message.service";
 import {
   getValuesFromElements,
   toggleAttachWindow,
@@ -16,10 +17,9 @@ const toggleDeleteUserModal = createModalToggler("modal-delete-user");
 
 export class ChatPage extends Component {
   static componentName = "ChatPage";
-  constructor({ user, ...rest }: ChatPageProps) {
+  constructor(props) {
     super({
-      ...rest,
-      user,
+      ...props,
       toggleChatModal,
       toggleAttachWindow,
       toggleAddUserModal,
@@ -28,8 +28,18 @@ export class ChatPage extends Component {
       onSendMessage: (e: PointerEvent) => {
         e.preventDefault();
         const messageData = getValuesFromElements.bind(this)("message");
+        messageData.message = sanitizeHTML(messageData.message.trim());
         if (validateData.bind(this)(messageData)) {
           logger("Сообщение:", messageData);
+          const { socket } = this.props;
+          if (socket) {
+            socket.send(
+              JSON.stringify({ content: messageData.message, type: "message" })
+            );
+          }
+          //т.к отправка из 2 мест (кнопка и инпут) пока ищем напрямую для упрощения
+          const input = document.getElementById("message") as HTMLInputElement;
+          input.value = "";
         }
       },
       onAddUser: (e: PointerEvent) => {
@@ -81,6 +91,8 @@ export class ChatPage extends Component {
             ...chat,
             link: () => {
               this.props.router.go(`/messenger/${chat.id}`);
+              logger(`Подключение к чату ${chat.id}`);
+              this.props.store.dispatch(connectToChat.bind(this));
             },
             isChatActive: () => chat.id === this.props.idParam
           };
@@ -92,6 +104,7 @@ export class ChatPage extends Component {
   }
 
   render(): string {
+    //language=hbs
     return `
         <main class="main-chat">
             <div class="sidebar">
@@ -106,9 +119,7 @@ export class ChatPage extends Component {
                      {{/each}}
                 </ul>
             </div>
-
-            {{{ChatBox chat=currentChat idParam=idParam toggleAddUserModal=toggleAddUserModal toggleDeleteUserModal=toggleDeleteUserModal toggleAttachWindow=toggleAttachWindow toggleOptionsWindow=toggleOptionsWindow}}}
-
+            {{{ChatBox chat=currentChat idParam=idParam onSubmit=onSendMessage toggleAddUserModal=toggleAddUserModal toggleDeleteUserModal=toggleDeleteUserModal toggleAttachWindow=toggleAttachWindow toggleOptionsWindow=toggleOptionsWindow}}}
             {{{Modal id="modal-create-chat" toggler=toggleChatModal  inputName="chat_title" title="Создать чат" label="Название чата" inputId="chat-create" type="text" placeholder="супер чат" buttonText="Создать" onSubmit=onCreateChat validationField="${ValidationField.ChatTitle}"}}}
             {{{Modal id="modal-add-user" toggler=toggleAddUserModal inputName="user_to_add" title="Добавить пользователя" label="Логин" inputId="add-user-name" type="text" placeholder="ivan" buttonText="Добавить" onSubmit=onAddUser validationField="${ValidationField.UserToAdd}"}}}
             {{{Modal id="modal-delete-user" toggler=toggleDeleteUserModal inputName="user_to_delete" title="Удалить пользователя"  label="Логин" inputId="delete-user-name" type="text" placeholder="ivan" buttonText="Удалить"  onSubmit=onDeleteUser validationField="${ValidationField.UserToDelete}"}}}
