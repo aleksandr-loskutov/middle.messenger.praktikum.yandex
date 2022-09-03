@@ -2,6 +2,7 @@ import { Component } from "core";
 import { ChatDTO } from "types/api";
 import { ValidationField } from "utils/validator";
 import { withRouter, withStore } from "components/hoc";
+import { connectChats } from "services/message.service";
 
 class ChatBox extends Component {
   static componentName = "ChatBox";
@@ -12,21 +13,28 @@ class ChatBox extends Component {
       currentChat: this.props.store
         .getState()
         .chats.find((chat) => chat.id === this.props.idParam),
-      messages: () =>
-        this.props.store
-          .getState()
-          .chatMessages.map((message) => {
-            return {
-              ...message,
-              isMine: message.user_id === this.props.store.getState().user.id
-            };
-          })
-          .reverse()
+      messages: () => {
+        const chatId = this.props.idParam;
+        const messages = this.props.store.getState().chatMessages;
+        return chatId > 0 && messages[chatId]?.length > 0
+          ? messages[chatId]
+              .map((message) => {
+                return {
+                  ...message,
+                  isMine:
+                    message.user_id === this.props.store.getState().user.id
+                };
+              })
+              .reverse()
+          : [];
+      }
     });
   }
-
+  componentDidMount() {
+    this.props.store.dispatch(connectChats.bind(this));
+  }
   render(): string {
-    // language=hbs
+    //language=hbs
     return `
     <div class="chat-container">
         {{#if currentChat}}
@@ -83,6 +91,7 @@ class ChatBox extends Component {
                                     class="action-bar__textarea-input"
                                     placeholder="Сообщение..."
                                     errorClass="hidden"
+                                    autofocus=true
                                     validationField = "${ValidationField.Message}"
                             }}}
                         </div>
