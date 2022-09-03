@@ -45,7 +45,8 @@ export class Input extends Component {
                 value="{{value}}"
                 id="{{id}}"
                 placeholder="{{placeholder}}"
-                {{#if disabled}}disabled{{/if}}/>
+                {{#if disabled}}disabled{{/if}}
+                {{#if autofocus}}autofocus{{/if}}/>
 `;
   }
 }

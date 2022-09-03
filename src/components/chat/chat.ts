@@ -21,11 +21,7 @@ export class Chat extends Component {
   render(): string {
     // language=hbs
     return `
-        {{#if isChatActive}}
-            <li class="sidebar__chat-item chat-active" >
-        {{else}}
-            <li class="sidebar__chat-item">
-        {{/if}}
+            <li class="sidebar__chat-item {{#if isChatActive}}chat-active{{/if}}" >
             <img class="chat-item__avatar avatar avatar-normal"  src={{avatar}} alt="аватар {{title}}."/>
             <span class="chat-item__chat-name">{{title}}</span>
         {{#if last_message}}
@@ -33,7 +29,7 @@ export class Chat extends Component {
             <span class="chat-item__message-text"> {{last_message.content}} </span>
         {{/if}}
         {{#if unread_count}}
-                <span class="chat-item__message-status">{{unread_count}}</span>
+            {{#if isChatActive}}{{else}}<span class="chat-item__message-status">{{unread_count}}</span>{{/if}}
         {{/if}}
         </li>
     `;

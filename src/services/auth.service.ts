@@ -1,10 +1,11 @@
-import { AuthAPI } from "api";
+import { AuthAPI, ChatAPI } from "api";
 import type { Dispatch } from "core";
-import { transformUser, apiHasError } from "utils";
+import { transformUser, apiHasError, logger } from "utils";
 import {
   LoginDTO as LoginPayload,
   RegisterDTO as RegisterPayload
 } from "types/api";
+import { setDefaultAvatars } from "utils/helpers";
 
 export const login = async (
   dispatch: Dispatch<AppState>,
@@ -24,7 +25,14 @@ export const login = async (
     dispatch(logout);
     return;
   }
-  dispatch({ user: transformUser(user) });
+  const chatApi = new ChatAPI();
+  let chats = await chatApi.getChats();
+  if (apiHasError(chats)) {
+    logger("getChatsApiError", chats);
+    chats = [];
+  }
+  chats = setDefaultAvatars(chats);
+  dispatch({ user: transformUser(user), chats });
   window.router.go("/messenger");
 };
 
@@ -46,14 +54,14 @@ export const register = async (
     dispatch(logout);
     return;
   }
-  dispatch({ user: transformUser(user) });
   window.router.go("/messenger");
+  dispatch({ user: transformUser(user) });
 };
 
 export const logout = async (dispatch: Dispatch<AppState>) => {
   dispatch({ isLoading: true });
   const api: AuthAPI = new AuthAPI();
   await api.logout();
-  dispatch({ isLoading: false, user: null });
   window.router.go("/");
+  dispatch({ isLoading: false, user: null });
 };

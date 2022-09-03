@@ -3,7 +3,6 @@ export { createChat, getChats } from "./chat.service";
 export {
   updateUserData,
   updateUserPassword,
-  searchAndAddOrDeleteUserFromChat,
   updateUserAvatar
 } from "./user.service";
 export { initApp } from "./initApp";

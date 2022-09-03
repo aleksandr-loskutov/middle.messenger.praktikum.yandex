@@ -65,6 +65,7 @@ export class ControlledInput extends Component {
                   onFocus=onFocus
                   onBlur=onBlur
                   onEnter=onEnter
+                  autofocus=autofocus
                   disabled=disabled}}}
                 <span class="{{#if errorClass}}{{errorClass}}{{else}}login-form__input-error{{/if}}">{{{Error ref="error"}}}</span>
       </div>
