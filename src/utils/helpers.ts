@@ -1,4 +1,4 @@
-import { APIError } from "types/api";
+import { APIError, ChatDTO } from "types/api";
 import { DEBUG } from "./consts";
 
 export function hasError(response: any): response is APIError {
@@ -48,7 +48,7 @@ export function queryStringify(data: StringIndexed): string | never {
   }, "");
 }
 
-export function logger(message: string, data?: object) {
+export function logger(message: string, data?: object | string) {
   if (DEBUG) {
     console.log(message, data || "");
   }
@@ -104,37 +104,29 @@ export const createImageFromInitials = (
   return canvas.toDataURL();
 };
 
-export function displayDate(data) {
-  const date = new Date(data);
-  const dateNow = new Date();
-  const yearDif = dateNow.getFullYear() - date.getFullYear();
-  if (yearDif === 0) {
-    const dayDif = dateNow.getDay() - date.getDay();
-    if (dayDif === 0) {
-      const hourDif = dateNow.getHours() - date.getHours();
-      if (hourDif === 0) {
-        const minutesDif = dateNow.getMinutes() - date.getMinutes();
-        if (minutesDif >= 0 && minutesDif < 1) return "сейчас";
-      }
-      return `${date.getHours()}:${date.getMinutes()}`;
-    }
-
-    return `${date.getDay()} ${date.toLocaleString("default", {
-      month: "long"
-    })}`;
+export function displayDate(date) {
+  const dateObj = new Date(date);
+  const today = new Date();
+  const yesterday = new Date(today.setDate(today.getDate() - 1));
+  const tomorrow = new Date(today.setDate(today.getDate() + 1));
+  const yesterdayTime = yesterday.getTime();
+  const tomorrowTime = tomorrow.getTime();
+  const dateTime = dateObj.getTime();
+  if (dateTime > yesterdayTime && dateTime < tomorrowTime) {
+    const minutesPrefix = dateObj.getMinutes() < 10 ? "0" : "";
+    return `${dateObj.getHours()}:${minutesPrefix}${dateObj.getMinutes()}`;
+  } else {
+    return dateObj.toLocaleDateString();
   }
-  return (
-    date.getFullYear() + "." + (date.getMonth() + 1) + "_" + date.getDate()
-  );
 }
 
-export function setDefaultAvatars(chats: any[]) {
-  chats.forEach((chat) => {
+export function setDefaultAvatars(chats: ChatDTO[]) {
+  if (!chats) return [];
+  return chats.map((chat) => {
     if (!chat.avatar) {
-      chat.avatar = createImageFromInitials(100, chat.title);
+      return { ...chat, avatar: createImageFromInitials(100, chat.title) };
     }
   });
-  return chats || [];
 }
 
 export function cloneDeep<T extends object = object>(obj: T) {
@@ -210,19 +202,19 @@ export function cloneDeep<T extends object = object>(obj: T) {
     throw new Error(`Unable to copy object: ${item}`);
   })(obj);
 }
-
+//todo рефакторинг
 export function connectWebSocket(url: string) {
   return new Promise(function (resolve, reject) {
-    const server = new WebSocket(url);
+    const socket = new WebSocket(url);
 
-    server.onopen = function () {
+    socket.onopen = function () {
       logger("Соединение установлено.");
 
-      server.addEventListener("error", (event) => {
+      socket.addEventListener("error", (event) => {
         logger("Ошибка", event.message);
       });
 
-      server.addEventListener("close", (event) => {
+      socket.addEventListener("close", (event) => {
         if (event.wasClean) {
           logger("Соединение закрыто чисто");
         } else {
@@ -232,9 +224,9 @@ export function connectWebSocket(url: string) {
       });
 
       const ping = () => {
-        if (!server) return;
-        if (server.readyState !== 1) return;
-        server.send(
+        if (!socket) return;
+        if (socket.readyState !== 1) return;
+        socket.send(
           JSON.stringify({
             type: "ping"
           })
@@ -243,9 +235,9 @@ export function connectWebSocket(url: string) {
       };
 
       ping();
-      resolve(server);
+      resolve(socket);
     };
-    server.onerror = function (err) {
+    socket.onerror = function (err) {
       logger("Ошибка", err.message);
       reject(err);
     };
@@ -260,5 +252,5 @@ export function fileToFormData(file: File): FormData {
 
 //todo переделать
 export function sanitizeString(str) {
-  return str.replace(/[^a-zA-Zа-яА-ЯёЁ0-9 ]/g, "");
+  return str.replace(/[^a-zA-Zа-яА-ЯёЁ0-9 ]/g, "").trim();
 }
