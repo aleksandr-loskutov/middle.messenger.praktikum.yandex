@@ -1,7 +1,7 @@
 import { ChatAPI, UserAPI } from "api";
 import type { Dispatch } from "core";
-import { transformUser, apiHasError } from "utils";
-import { RegisterDTO as UserDataPayload, UserDTO } from "types/api";
+import { transformUser, apiHasError, logger } from "utils";
+import { APIError, RegisterDTO as UserDataPayload, UserDTO } from "types/api";
 import { fileToFormData } from "utils";
 
 export const updateUserData = async (
@@ -46,7 +46,7 @@ export const updateUserPassword = async (
 export const updateUserAvatar = async (
   dispatch: Dispatch<AppState>,
   state: AppState,
-  payload
+  payload: File
 ) => {
   if (state.isLoading) return;
   dispatch({ isLoading: true, formSuccess: null });
@@ -77,49 +77,64 @@ export const updateUserAvatar = async (
   }
 };
 
-export const searchAndAddOrDeleteUserFromChat = async (
+export const searchUserByLogin = async (payload: {
+  login: string;
+}): Promise<UserDTO | APIError> => {
+  const api = new UserAPI();
+  const response = (await api.searchUsers(payload)) as UserDTO[] | APIError;
+  if (Array.isArray(response)) {
+    if (response.length === 0) {
+      return { reason: "Пользователь не найден" };
+    }
+    const { login } = payload;
+    const user = response.find(
+      (user) => user.login.toLowerCase() === login.toLowerCase()
+    );
+    if (user) {
+      return user;
+    }
+    return { reason: "Пользователь не найден" };
+  }
+
+  return { reason: "Пользователь не найден" };
+};
+
+export const addUsersToChat = async (
   dispatch: Dispatch<AppState>,
   state: AppState,
-  payload: { login: string; chatId: number; mode: "add" | "remove" }
+  payload: { users: number[]; chatId: number }
 ) => {
   dispatch({ isLoading: true, formSuccess: null });
-  const api = new UserAPI();
-  const response = (await api.searchUsers(payload)) as UserDTO[];
-
+  const chatAPI = new ChatAPI();
+  const response = await chatAPI.addUsersToChat(payload);
   if (apiHasError(response)) {
+    logger("addUsersToChat", response);
     dispatch({ isLoading: false, formError: response.reason });
     return;
-  } else if (response.length === 0) {
-    dispatch({ isLoading: false, formError: "Пользователь не найден" });
+  }
+  dispatch({
+    isLoading: false,
+    formError: null,
+    formSuccess: "пользователь/ли добавлен/ы в чат"
+  });
+};
+
+export const removeUsersFromChat = async (
+  dispatch: Dispatch<AppState>,
+  state: AppState,
+  payload: { users: number[]; chatId: number }
+) => {
+  dispatch({ isLoading: true, formSuccess: null });
+  const chatAPI = new ChatAPI();
+  const response = await chatAPI.removeUsersFromChat(payload);
+  if (apiHasError(response)) {
+    logger("removeUsersFromChat", response);
+    dispatch({ isLoading: false, formError: response.reason });
     return;
   }
-  const { chatId, login, mode } = payload;
-  const foundUser = response.find((user) => user.login === login);
-  if (foundUser) {
-    const chatAPI = new ChatAPI();
-    const payload = {
-      users: [foundUser.id],
-      chatId
-    };
-    let response;
-    if (mode === "add") {
-      response = await chatAPI.addUsersToChat(payload);
-    } else if (mode === "remove") {
-      response = await chatAPI.removeUsersFromChat(payload);
-    }
-    if (apiHasError(response)) {
-      console.log(response.reason);
-      dispatch({ isLoading: false, formError: response.reason });
-      return;
-    }
-    dispatch({
-      isLoading: false,
-      formError: null,
-      formSuccess: `${foundUser.login} ${
-        mode === "add" ? "добавлен" : "удален"
-      } `
-    });
-  } else {
-    dispatch({ isLoading: false, formError: "Пользователь не найден" });
-  }
+  dispatch({
+    isLoading: false,
+    formError: null,
+    formSuccess: "пользователь/ли удален/ы"
+  });
 };
