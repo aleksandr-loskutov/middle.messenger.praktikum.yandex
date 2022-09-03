@@ -1,19 +1,28 @@
 import { Component } from "core";
 import { ValidationField, validateData } from "utils/validator";
 import { withRouter, withStore } from "components/hoc";
-import { logger, sanitizeString } from "utils";
-import { createChat, searchAndAddOrDeleteUserFromChat } from "services";
-import { connectToChat } from "services/message.service";
+import { apiHasError, logger, sanitizeString } from "utils";
+import { createChat } from "services";
+import {
+  MODAL_ADD_USER_ID,
+  MODAL_CREATE_CHAT_ID,
+  MODAL_DELETE_USER_ID
+} from "utils/consts";
 import {
   getValuesFromElements,
   toggleAttachWindow,
   createModalToggler,
   toggleOptionsWindow
 } from "utils/dom";
+import {
+  addUsersToChat,
+  removeUsersFromChat,
+  searchUserByLogin
+} from "services/user.service";
 
-const toggleChatModal = createModalToggler("modal-create-chat");
-const toggleAddUserModal = createModalToggler("modal-add-user");
-const toggleDeleteUserModal = createModalToggler("modal-delete-user");
+const toggleChatModal = createModalToggler(MODAL_CREATE_CHAT_ID);
+const toggleAddUserModal = createModalToggler(MODAL_ADD_USER_ID);
+const toggleDeleteUserModal = createModalToggler(MODAL_DELETE_USER_ID);
 
 export class ChatPage extends Component {
   static componentName = "ChatPage";
@@ -28,43 +37,70 @@ export class ChatPage extends Component {
       onSendMessage: (e: PointerEvent) => {
         e.preventDefault();
         const messageData = getValuesFromElements.bind(this)("message");
-        messageData.message = sanitizeString(messageData.message.trim());
+        messageData.message = sanitizeString(messageData.message);
         if (validateData.bind(this)(messageData)) {
           logger("Сообщение:", messageData);
-          const { socket } = this.props;
+          const chatId = this.props.idParam;
+          let { socket } = this.props.store
+            .getState()
+            .tokens.find((token) => token.chatId === chatId);
           if (socket) {
             socket.send(
               JSON.stringify({ content: messageData.message, type: "message" })
             );
+            //т.к отправка из 2 мест (кнопка и инпут) пока ищем напрямую для упрощения
+            const input = document.getElementById(
+              "message"
+            ) as HTMLInputElement;
+            input.value = "";
+          } else {
+            logger(`Нет соединения с сокетом для чата ${chatId}`);
           }
-          //т.к отправка из 2 мест (кнопка и инпут) пока ищем напрямую для упрощения
-          const input = document.getElementById("message") as HTMLInputElement;
-          input.value = "";
         }
       },
-      onAddUser: (e: PointerEvent) => {
+      onAddUser: async (e: PointerEvent) => {
         e.preventDefault();
         const userToAdd = getValuesFromElements.bind(this)("#add-user-name");
         if (validateData.bind(this)(userToAdd)) {
           logger("Запрос на добавление пользователя в чат:", userToAdd);
-          this.props.store.dispatch(searchAndAddOrDeleteUserFromChat, {
-            login: userToAdd.user_to_add,
-            chatId: this.props.idParam,
-            mode: "add"
+          const userSearchResponse = await searchUserByLogin({
+            login: userToAdd.user_to_add
           });
+
+          if (!apiHasError(userSearchResponse)) {
+            this.props.store.dispatch(addUsersToChat, {
+              users: [userSearchResponse.id],
+              chatId: this.props.idParam
+            });
+          } else {
+            this.props.store.dispatch({
+              isLoading: false,
+              formError: userSearchResponse.reason || "Ошибка, попробуйте позже"
+            });
+          }
         }
       },
-      onDeleteUser: (e: PointerEvent) => {
+      onDeleteUser: async (e: PointerEvent) => {
         e.preventDefault();
         const userToRemove =
           getValuesFromElements.bind(this)("#delete-user-name");
         if (validateData.bind(this)(userToRemove)) {
           logger("Запрос на удаление пользователя из чата:", userToRemove);
-          this.props.store.dispatch(searchAndAddOrDeleteUserFromChat, {
-            login: userToRemove.user_to_delete,
-            chatId: this.props.idParam,
-            mode: "remove"
+          const userSearchResponse = await searchUserByLogin({
+            login: userToRemove.user_to_delete
           });
+
+          if (!apiHasError(userSearchResponse)) {
+            this.props.store.dispatch(removeUsersFromChat, {
+              users: [userSearchResponse.id],
+              chatId: this.props.idParam
+            });
+          } else {
+            this.props.store.dispatch({
+              isLoading: false,
+              formError: userSearchResponse.reason || "Ошибка, попробуйте позже"
+            });
+          }
         }
       },
       onProfileLinkClick: () => {
@@ -91,15 +127,12 @@ export class ChatPage extends Component {
             ...chat,
             link: () => {
               this.props.router.go(`/messenger/${chat.id}`);
-              logger(`Подключение к чату ${chat.id}`);
-              this.props.store.dispatch(connectToChat.bind(this));
             },
             isChatActive: () => chat.id === this.props.idParam
           };
         }),
       formError: () => this.props.store.getState().formError,
-      isLoading: () => this.props.store.getState().isLoading,
-      idParam: () => this.props.idParam
+      isLoading: () => this.props.store.getState().isLoading
     });
   }
 
@@ -115,11 +148,11 @@ export class ChatPage extends Component {
                 {{{ControlledInput name="search" placeholder="Поиск" type="text" id="search" class="sidebar__search-input"}}}
                 <ul class="sidebar__chat-list">
                      {{#each chats}}
-                     {{{Chat chat=this onClick=this.link}}}
+                     {{{Chat chat=this onClick=this.link }}}
                      {{/each}}
                 </ul>
             </div>
-            {{{ChatBox chat=currentChat idParam=idParam onSubmit=onSendMessage toggleAddUserModal=toggleAddUserModal toggleDeleteUserModal=toggleDeleteUserModal toggleAttachWindow=toggleAttachWindow toggleOptionsWindow=toggleOptionsWindow}}}
+            {{{ChatBox idParam=idParam onSubmit=onSendMessage toggleAddUserModal=toggleAddUserModal toggleDeleteUserModal=toggleDeleteUserModal toggleAttachWindow=toggleAttachWindow toggleOptionsWindow=toggleOptionsWindow}}}
             {{{Modal id="modal-create-chat" toggler=toggleChatModal  inputName="chat_title" title="Создать чат" label="Название чата" inputId="chat-create" type="text" placeholder="супер чат" buttonText="Создать" onSubmit=onCreateChat validationField="${ValidationField.ChatTitle}"}}}
             {{{Modal id="modal-add-user" toggler=toggleAddUserModal inputName="user_to_add" title="Добавить пользователя" label="Логин" inputId="add-user-name" type="text" placeholder="ivan" buttonText="Добавить" onSubmit=onAddUser validationField="${ValidationField.UserToAdd}"}}}
             {{{Modal id="modal-delete-user" toggler=toggleDeleteUserModal inputName="user_to_delete" title="Удалить пользователя"  label="Логин" inputId="delete-user-name" type="text" placeholder="ivan" buttonText="Удалить"  onSubmit=onDeleteUser validationField="${ValidationField.UserToDelete}"}}}
