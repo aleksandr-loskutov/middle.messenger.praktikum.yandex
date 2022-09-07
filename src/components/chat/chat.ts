@@ -2,22 +2,35 @@ import { Component } from "core";
 import { ChatDTO } from "types/api";
 import { displayDate } from "utils/helpers";
 
+type ChatProps = {
+  chat: ChatDTO;
+  onClick?: () => void;
+  currentUser: User;
+};
+
 export class Chat extends Component {
   static componentName = "Chat";
-  constructor({ chat, onClick, ...rest }: { chat: ChatDTO }) {
+  constructor({ chat, onClick, currentUser, ...rest }: ChatProps) {
     super({
       events: { click: onClick },
       ...chat,
       last_message: chat.last_message
         ? {
             ...chat.last_message,
-            simpleDate: displayDate(chat.last_message.time)
+            simpleDate: displayDate(chat.last_message.time),
+            content:
+              chat.last_message.user?.login === currentUser.login ||
+              chat.last_message.isMine
+                ? `Вы: ${chat.last_message.content.replace("Вы: ", "")}`
+                : chat.last_message.content
           }
         : null,
       ...rest
     });
   }
-
+  componentDidMount() {
+    this.props.connect();
+  }
   render(): string {
     // language=hbs
     return `
