@@ -4,10 +4,7 @@ import { apiHasError, logger } from "utils";
 import { ChatDTO, CreateChatDTO } from "types/api";
 import { setDefaultAvatars } from "utils/helpers";
 
-export const getChats = async (
-  dispatch: Dispatch<AppState>,
-  state: AppState
-) => {
+export const getChats = async (dispatch: Dispatch<AppState>) => {
   dispatch({ isLoading: true });
   const api = new ChatAPI();
   const response = await api.getChats();
@@ -25,7 +22,7 @@ export const getChats = async (
 
 export const createChat = async (
   dispatch: Dispatch<AppState>,
-  state: AppState,
+  _state: AppState,
   data: CreateChatDTO
 ) => {
   dispatch({ isLoading: true, formSuccess: null });
@@ -37,10 +34,15 @@ export const createChat = async (
     return;
   }
   const chats = await api.getChats();
+  if (apiHasError(chats)) {
+    logger("getChatsApiError", chats);
+    dispatch({ isLoading: false, formError: chats.reason });
+    return;
+  }
   dispatch({
     isLoading: false,
     formError: null,
     formSuccess: "Чат успешно создан",
-    chats: setDefaultAvatars(chats) as ChatDTO[]
+    chats: setDefaultAvatars(chats)
   });
 };

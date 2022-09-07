@@ -9,7 +9,7 @@ import { setDefaultAvatars } from "utils/helpers";
 
 export const login = async (
   dispatch: Dispatch<AppState>,
-  state: AppState,
+  _state: AppState,
   payload: LoginPayload
 ) => {
   dispatch({ isLoading: true });
@@ -21,7 +21,7 @@ export const login = async (
   }
   const user = await api.getUser();
   dispatch({ isLoading: false, formError: null });
-  if (apiHasError(response)) {
+  if (apiHasError(user)) {
     dispatch(logout);
     return;
   }
@@ -38,7 +38,7 @@ export const login = async (
 
 export const register = async (
   dispatch: Dispatch<AppState>,
-  state: AppState,
+  _state: AppState,
   payload: RegisterPayload
 ) => {
   dispatch({ isLoading: true });
@@ -49,13 +49,12 @@ export const register = async (
     return;
   }
   const user = await api.getUser();
-  dispatch({ isLoading: false, formError: null });
-  if (apiHasError(response)) {
+  if (apiHasError(user)) {
     dispatch(logout);
     return;
   }
   window.router.go("/messenger");
-  dispatch({ user: transformUser(user) });
+  dispatch({ user: transformUser(user), isLoading: false, formError: null });
 };
 
 export const logout = async (dispatch: Dispatch<AppState>) => {

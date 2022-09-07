@@ -1,7 +1,7 @@
 import { EventBus } from "core";
 import { nanoid } from "nanoid";
 import Handlebars from "handlebars";
-import { cloneDeep } from "utils/helpers";
+import { cloneDeep, compareObjects } from "utils/helpers";
 
 type Events = Values<typeof Component.EVENTS>;
 
@@ -26,12 +26,12 @@ export class Component<P = any> {
   protected children: { [id: string]: Component } = {};
   eventBus: () => EventBus<Events>;
   protected state: any = {};
-  protected refs: { [key: string]: HTMLElement } = {};
+  protected refs: { [key: string]: Component } = {};
 
   public constructor(props?: P) {
     const eventBus = new EventBus<Events>();
 
-    this.getStateFromProps(props);
+    this.getStateFromProps();
     this.props = this._makePropsProxy(props || ({} as P));
     this.state = this._makePropsProxy(this.state);
     this.eventBus = () => eventBus;
@@ -65,7 +65,8 @@ export class Component<P = any> {
     this._element = this._createDocumentElement("div");
   }
 
-  protected getStateFromProps(props: any): void {
+  //eslint-disable-next-line
+  protected getStateFromProps(): void {
     this.state = {};
   }
 
@@ -74,9 +75,9 @@ export class Component<P = any> {
     this.eventBus().emit(Component.EVENTS.FLOW_RENDER, this.props);
   }
 
-  _componentDidMount(props: P) {
+  _componentDidMount() {
     this._checkInDom();
-    this.componentDidMount(props);
+    this.componentDidMount();
   }
   //eslint-disable-next-line
   componentDidMount() {}
@@ -96,9 +97,8 @@ export class Component<P = any> {
     this._render();
   }
 
-  componentDidUpdate() {
-    //todo
-    return true;
+  componentDidUpdate(oldProps: P, newProps: P) {
+    return compareObjects(oldProps, newProps);
   }
 
   setProps = (nextProps: Partial<P>) => {
@@ -145,7 +145,6 @@ export class Component<P = any> {
         }
       }, 100);
     }
-
     return this.element!;
   }
 

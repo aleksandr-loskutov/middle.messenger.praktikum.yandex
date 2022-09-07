@@ -54,7 +54,7 @@ export function logger(message: string, data?: object | string) {
   }
 }
 
-export const getRandomColor = () => {
+export const getRandomColor = (): string => {
   const letters = "0123456789ABCDEF";
   let color = "#";
   for (let i = 0; i < 6; i++) {
@@ -63,7 +63,7 @@ export const getRandomColor = () => {
   return color;
 };
 
-const getInitials = (name) => {
+const getInitials = (name: string): string | null => {
   let initials;
   const nameSplit = name.split(" ");
   const nameLength = nameSplit.length;
@@ -72,21 +72,21 @@ const getInitials = (name) => {
       nameSplit[0].substring(0, 1) + nameSplit[nameLength - 1].substring(0, 1);
   } else if (nameLength === 1) {
     initials = nameSplit[0].substring(0, 1);
-  } else return;
+  } else return null;
 
   return initials.toUpperCase();
 };
 
 export const createImageFromInitials = (
-  size,
-  name,
+  size: number,
+  name: string,
   color = getRandomColor()
-) => {
-  if (name == null) return;
-  name = getInitials(name);
+): string | null => {
+  if (!name) return null;
+  name = getInitials(name) as string;
 
   const canvas = document.createElement("canvas");
-  const context = canvas.getContext("2d");
+  const context = canvas.getContext("2d") as CanvasRenderingContext2D;
   canvas.width = canvas.height = size;
 
   context.fillStyle = "#ffffff";
@@ -104,7 +104,7 @@ export const createImageFromInitials = (
   return canvas.toDataURL();
 };
 
-export function displayDate(date) {
+export function displayDate(date: string): string {
   const dateObj = new Date(date);
   const today = new Date();
   const yesterday = new Date(today.setDate(today.getDate() - 1));
@@ -120,13 +120,13 @@ export function displayDate(date) {
   }
 }
 
-export function setDefaultAvatars(chats: ChatDTO[]) {
+export function setDefaultAvatars(chats: ChatDTO[]): ChatDTO[] {
   if (!chats) return [];
   return chats.map((chat) => {
     if (!chat.avatar) {
       return { ...chat, avatar: createImageFromInitials(100, chat.title) };
     }
-  });
+  }) as ChatDTO[];
 }
 
 export function cloneDeep<T extends object = object>(obj: T) {
@@ -154,7 +154,7 @@ export function cloneDeep<T extends object = object>(obj: T) {
     // Handle:
     // * Array
     if (item instanceof Array) {
-      const copy = [];
+      const copy = [] as object[];
 
       item.forEach((_, i) => (copy[i] = _cloneDeep(item[i])));
 
@@ -188,6 +188,7 @@ export function cloneDeep<T extends object = object>(obj: T) {
 
       // Handle:
       // * Object.symbol
+
       Object.getOwnPropertySymbols(item).forEach(
         (s) => (copy[s] = _cloneDeep(item[s]))
       );
@@ -202,8 +203,9 @@ export function cloneDeep<T extends object = object>(obj: T) {
     throw new Error(`Unable to copy object: ${item}`);
   })(obj);
 }
+
 //todo рефакторинг
-export function connectWebSocket(url: string) {
+export function connectWebSocket(url: string): Promise<WebSocket> {
   return new Promise(function (resolve, reject) {
     const socket = new WebSocket(url);
 
@@ -211,7 +213,7 @@ export function connectWebSocket(url: string) {
       logger("Соединение установлено.");
 
       socket.addEventListener("error", (event) => {
-        logger("Ошибка", event.message);
+        logger("Ошибка", event);
       });
 
       socket.addEventListener("close", (event) => {
@@ -238,7 +240,7 @@ export function connectWebSocket(url: string) {
       resolve(socket);
     };
     socket.onerror = function (err) {
-      logger("Ошибка", err.message);
+      logger("Ошибка", err);
       reject(err);
     };
   });
@@ -251,6 +253,46 @@ export function fileToFormData(file: File): FormData {
 }
 
 //todo переделать
-export function sanitizeString(str) {
+export function sanitizeString(str: string): string {
   return str.replace(/[^a-zA-Zа-яА-ЯёЁ0-9 ]/g, "").trim();
+}
+
+export function compareObjects(obj1: any, obj2: any): boolean {
+  if (obj1 === obj2) return true;
+
+  if (
+    typeof obj1 !== "object" ||
+    typeof obj2 !== "object" ||
+    obj1 == null ||
+    obj2 == null
+  ) {
+    return false;
+  }
+
+  const keysA = Object.keys(obj1);
+  const keysB = Object.keys(obj2);
+
+  if (keysA.length !== keysB.length) {
+    return false;
+  }
+
+  let result = true;
+
+  keysA.forEach((key) => {
+    if (!keysB.includes(key)) {
+      result = false;
+    }
+
+    if (typeof obj1[key] === "function" || typeof obj2[key] === "function") {
+      if (obj1[key].toString() !== obj2[key].toString()) {
+        result = false;
+      }
+    }
+
+    if (!compareObjects(obj1[key], obj2[key])) {
+      result = false;
+    }
+  });
+
+  return result;
 }
