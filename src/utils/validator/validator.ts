@@ -1,12 +1,13 @@
 import { validationRules } from "utils/validator";
 
-export function validator(data: object, config?: object) {
+//todo нормально дотипизировать
+export function validator(data: Indexed, config?: any): Indexed {
   config = config || findRule(data);
   if (Object.keys(config).length === 0) {
     return { error: "Ошибка валидации" };
   }
-  const errors = {};
-  function validate(validateMethod: string, data: string, config: object) {
+  const errors = {} as Indexed;
+  function validate(validateMethod: string, data: any, config: any) {
     let statusValidate;
     switch (validateMethod) {
       case "isRequired": {
@@ -83,7 +84,7 @@ export function validator(data: object, config?: object) {
   return errors;
 }
 
-function findRule(data) {
+function findRule(data: Indexed) {
   for (const fieldName in data) {
     if (Object.prototype.hasOwnProperty.call(validationRules, fieldName)) {
       return { [fieldName]: validationRules[fieldName] };
@@ -92,7 +93,7 @@ function findRule(data) {
   return {};
 }
 
-export function validateData(data): boolean {
+export function validateData(data: Indexed): boolean {
   const errors = {
     ...validator(data, validationRules),
     ...comparePasswords(data)
@@ -109,7 +110,7 @@ export function validateData(data): boolean {
   return false;
 }
 
-function comparePasswords(data) {
+function comparePasswords(data: Indexed): Indexed {
   let passwordErrors = {};
   if (
     Object.prototype.hasOwnProperty.call(data, "password") &&

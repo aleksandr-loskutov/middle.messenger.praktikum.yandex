@@ -1,11 +1,13 @@
 import { Store, Router } from "core";
-import { ChatDTO, MessageDTO } from "./api";
+import { APIError, ChatDTO, ChatToken, MessageDTO } from "./api";
 
 declare global {
   export type Nullable<T> = T | null;
   export type Keys<T extends Record<string, unknown>> = keyof T;
   export type Values<T extends Record<string, unknown>> = T[Keys<T>];
-  export type Indexed = { [key: string]: any };
+  export type Indexed = { [key: string]: string };
+  export type ApiResponse<T> = Promise<T | APIError>;
+  export type PropsAny = Record<string, unknown>;
 
   export type AppState = {
     appIsInited: boolean;
@@ -15,6 +17,9 @@ declare global {
     user: User | null;
     chats: ChatDTO[] | null;
     chatMessages: MessageDTO[];
+    isChatsLoaded: boolean;
+    isChatsLoading: boolean;
+    tokens: ChatToken[];
   };
 
   export type User = {
@@ -30,6 +35,16 @@ declare global {
   export interface Window {
     store: Store<AppState>;
     router: Router;
+  }
+  export type RequestOptions = {
+    headers?: { [key: string]: string };
+    timeout?: number;
+    method?: string;
+    data?: any;
+    retries?: number;
+  };
+  export interface HTMLInputEvent extends Event {
+    target: HTMLInputElement & EventTarget & { files?: File[] };
   }
 }
 

@@ -15,7 +15,7 @@ enum Pages {
   Error = "error"
 }
 
-const map: Record<Pages, Component<any>> = {
+const map: Record<Pages, Component> = {
   [Pages.Login]: LoginPage,
   [Pages.Register]: RegisterPage,
   [Pages.Profile]: ProfilePage,
@@ -24,7 +24,7 @@ const map: Record<Pages, Component<any>> = {
   [Pages.Error]: ErrorPage
 };
 
-const getPageComponent = (page: Pages): Component<any> => {
+const getPageComponent = (page: Pages): Component => {
   return map[page];
 };
 

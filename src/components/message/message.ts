@@ -1,25 +1,18 @@
 import { Component } from "core";
 import "./message.scss";
 import { displayDate } from "utils/helpers";
+import { MessageDTO } from "types/api";
 
-export interface MessageProps {
-  id: number;
-  content?: string;
-  time: string;
-  isText?: boolean;
-  isMine?: boolean;
-  isSent?: boolean;
-  is_read?: boolean;
-  image?: string;
-}
+type MessageProps = {
+  message: MessageDTO;
+};
 
 export class Message extends Component {
   static componentName = "Message";
-  constructor({ message, ...rest }: { message: MessageProps }) {
+  constructor({ message, ...rest }: MessageProps) {
     super({
       ...rest,
       ...message,
-
       isText: message.type === "message",
       simpleDate: displayDate(message.time)
     });

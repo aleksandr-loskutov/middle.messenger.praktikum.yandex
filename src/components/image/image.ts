@@ -6,6 +6,7 @@ interface ImageProps {
   alt?: string;
   class?: string;
   icon?: string;
+  onClick?: () => void;
 }
 export class Image extends Component {
   static componentName = "Image";

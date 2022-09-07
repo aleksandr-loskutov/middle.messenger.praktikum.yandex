@@ -8,7 +8,7 @@ import { login } from "services";
 class LoginPage extends Component {
   static componentName = "LoginPage";
 
-  constructor(props) {
+  constructor(props: PropsAny) {
     super({
       ...props,
       onLogin: (e: PointerEvent) => {

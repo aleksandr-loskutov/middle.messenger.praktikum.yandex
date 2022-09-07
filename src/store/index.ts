@@ -5,5 +5,8 @@ export const defaultState: AppState = {
   formSuccess: null,
   user: null,
   chats: null,
-  chatMessages: []
+  chatMessages: [],
+  isChatsLoaded: false,
+  isChatsLoading: false,
+  tokens: []
 };

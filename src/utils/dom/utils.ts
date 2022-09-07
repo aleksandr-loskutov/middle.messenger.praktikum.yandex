@@ -1,11 +1,11 @@
 export function toggleOptionsWindow() {
-  document.getElementById("chat-options").classList.toggle("hidden");
+  document.getElementById("chat-options")?.classList.toggle("hidden");
   document
     .getElementById("chat-options-button")
-    .classList.toggle("options-button-active");
+    ?.classList.toggle("options-button-active");
 }
 export function toggleAttachWindow() {
-  document.getElementById("attach-options").classList.toggle("hidden");
+  document.getElementById("attach-options")?.classList.toggle("hidden");
 }
 
 export function clickOnAvatarInput() {
@@ -17,9 +17,9 @@ export function clickOnAvatarInput() {
 export function createModalToggler(modalId: string) {
   const _modalId = modalId;
 
-  return (event) => {
+  return (event: PointerEvent) => {
     const { target } = event;
-    if (target.classList.contains("modal__wrapper")) {
+    if ((target as HTMLElement).classList.contains("modal__wrapper")) {
       const { parentElement } = target;
       parentElement.classList.toggle("hidden");
     } else {
@@ -30,15 +30,18 @@ export function createModalToggler(modalId: string) {
 }
 
 export function getValuesFromElements(...names: string[]): object {
-  const data = {};
+  const data = {} as Indexed;
   names.forEach((name) => {
     const element = this.element?.querySelector(
       name.includes("#") ? name : `[name="${name}"]`
-    );
+    ) as HTMLInputElement;
     if (element) {
-      name.includes("#")
-        ? (data[element.getAttribute("name")] = element.value)
-        : (data[name] = element.value);
+      if (name.includes("#")) {
+        const attr = element.getAttribute("name");
+        if (attr) data[attr] = element.value;
+      } else {
+        data[name] = element.value;
+      }
     }
   });
   return data;

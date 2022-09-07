@@ -8,7 +8,7 @@ import { logger } from "utils";
 export class RegisterPage extends Component {
   static componentName = "RegisterPage";
 
-  constructor(props) {
+  constructor(props: PropsAny) {
     super({
       ...props,
       onRegister: (e: PointerEvent) => {

@@ -1,13 +1,20 @@
 import { ChatAPI, UserAPI } from "api";
 import type { Dispatch } from "core";
 import { transformUser, apiHasError, logger } from "utils";
-import { APIError, RegisterDTO as UserDataPayload, UserDTO } from "types/api";
+import {
+  APIError,
+  ByLoginDTO,
+  PasswordsDTO,
+  UserDTO,
+  UsersToChatDTO,
+  UserUpdateProfileDTO
+} from "types/api";
 import { fileToFormData } from "utils";
 
 export const updateUserData = async (
   dispatch: Dispatch<AppState>,
-  state: AppState,
-  payload: UserDataPayload
+  _state: AppState,
+  payload: UserUpdateProfileDTO
 ) => {
   dispatch({ isLoading: true, formSuccess: null });
   const api = new UserAPI();
@@ -26,8 +33,8 @@ export const updateUserData = async (
 
 export const updateUserPassword = async (
   dispatch: Dispatch<AppState>,
-  state: AppState,
-  payload: UserDataPayload
+  _state: AppState,
+  payload: PasswordsDTO
 ) => {
   dispatch({ isLoading: true, formSuccess: null });
   const api = new UserAPI();
@@ -58,7 +65,7 @@ export const updateUserAvatar = async (
     return;
   }
 
-  const { avatar } = response as UserDTO;
+  const { avatar } = response;
   const { user } = state;
   if (avatar && user) {
     dispatch({
@@ -77,11 +84,11 @@ export const updateUserAvatar = async (
   }
 };
 
-export const searchUserByLogin = async (payload: {
-  login: string;
-}): Promise<UserDTO | APIError> => {
+export const searchUserByLogin = async (
+  payload: ByLoginDTO
+): Promise<UserDTO | APIError> => {
   const api = new UserAPI();
-  const response = (await api.searchUsers(payload)) as UserDTO[] | APIError;
+  const response = await api.searchUsers(payload);
   if (Array.isArray(response)) {
     if (response.length === 0) {
       return { reason: "Пользователь не найден" };
@@ -101,7 +108,7 @@ export const searchUserByLogin = async (payload: {
 
 export const addUsersToChat = async (
   dispatch: Dispatch<AppState>,
-  state: AppState,
+  _state: AppState,
   payload: { users: number[]; chatId: number }
 ) => {
   dispatch({ isLoading: true, formSuccess: null });
@@ -121,8 +128,8 @@ export const addUsersToChat = async (
 
 export const removeUsersFromChat = async (
   dispatch: Dispatch<AppState>,
-  state: AppState,
-  payload: { users: number[]; chatId: number }
+  _state: AppState,
+  payload: UsersToChatDTO
 ) => {
   dispatch({ isLoading: true, formSuccess: null });
   const chatAPI = new ChatAPI();

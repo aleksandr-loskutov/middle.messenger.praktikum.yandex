@@ -2,7 +2,7 @@ import { Component } from "core";
 
 export class Error extends Component {
   static componentName = "Error";
-  constructor(props) {
+  constructor(props: PropsAny) {
     super(props);
   }
   protected render(): string {

@@ -25,9 +25,9 @@ document.addEventListener("DOMContentLoaded", () => {
   /**
    * Инициализируем роутер
    */
-  initRouter(router, store);
+  initRouter(router);
 
-  store.on("changed", (prevState, nextState) => {
+  store.on("changed", (_prevState, nextState) => {
     router.start();
     if (DEBUG) {
       console.log(

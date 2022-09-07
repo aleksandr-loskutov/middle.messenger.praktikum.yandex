@@ -12,6 +12,14 @@ export type UserDTO = {
   phone: string;
   email: string;
 };
+export type UserUpdateProfileDTO = {
+  first_name: string;
+  second_name: string;
+  display_name: string;
+  login: string;
+  email: string;
+  phone: string;
+};
 
 export type LoginDTO = {
   login: string;
@@ -27,10 +35,14 @@ export type RegisterDTO = {
   phone: string;
 };
 
+export type Token = {
+  token: string;
+};
+
 export type ChatDTO = {
   id: number;
   title: string;
-  avatar: string;
+  avatar: string | null;
   unread_count: number;
   last_message: {
     user: {
@@ -43,7 +55,17 @@ export type ChatDTO = {
     };
     time: string;
     content: string;
+    isMine?: boolean;
   } | null;
+};
+
+export type UsersToChatDTO = {
+  users: number[];
+  chatId: number;
+};
+
+export type IdDTO = {
+  id: number;
 };
 
 export type CreateChatDTO = {
@@ -62,7 +84,7 @@ export type MessageDTO = {
   chat_id: number;
   time: string;
   type: string;
-  user_id: string;
+  user_id: number;
   content: string;
   file?: {
     id: number;
@@ -78,4 +100,27 @@ export type MessageDTO = {
 export type SendMessageDTO = {
   content: string;
   type: string;
+};
+
+export type PasswordsForm = {
+  password: string;
+  new_password: string;
+  new_password_confirm?: string;
+};
+
+export type PasswordsToCompare = PasswordsForm & { password_confirm: string };
+
+export type PasswordsDTO = {
+  oldPassword: string;
+  newPassword: string;
+};
+
+export type ByLoginDTO = {
+  login: string;
+};
+
+export type ChatToken = {
+  chatId: number;
+  token: string;
+  socket: WebSocket;
 };

@@ -1,4 +1,4 @@
-import { Router, Store } from "core";
+import { Router } from "core";
 import { getPageComponent, Pages } from "pages";
 
 const routes = [
@@ -34,7 +34,7 @@ const routes = [
   }
 ];
 
-export function initRouter(router: Router, store: Store<AppState>) {
+export function initRouter(router: Router) {
   routes.forEach((route) => {
     router.use(route.path, getPageComponent(route.component));
   });

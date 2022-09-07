@@ -1,23 +1,22 @@
 import { queryStringify } from "utils/helpers";
-import { API_ENDPOINT } from "utils/consts";
-
-const METHODS = {
-  GET: "GET",
-  POST: "POST",
-  PUT: "PUT",
-  DELETE: "DELETE"
-};
+import { API_ENDPOINT, METHODS } from "utils/consts";
 
 export class HttpService {
   constructor(private endPoint: string) {}
 
-  get = (url: string, options = {}) => {
+  get = <TResponse>(
+    url: string,
+    options: RequestOptions = {}
+  ): Promise<TResponse> => {
     const dataUrl = options.data !== undefined ?? queryStringify(options.data);
     const getUrl = dataUrl ? `${url}${dataUrl}` : url;
     return this.request(getUrl, { ...options, method: METHODS.GET });
   };
 
-  post = (url: string, options = {}) => {
+  post = <TResponse>(
+    url: string,
+    options: RequestOptions = {}
+  ): Promise<TResponse> => {
     return this.request(
       url,
       { ...options, method: METHODS.POST },
@@ -25,7 +24,10 @@ export class HttpService {
     );
   };
 
-  put = (url: string, options = {}) => {
+  put = <TResponse>(
+    url: string,
+    options: RequestOptions = {}
+  ): Promise<TResponse> => {
     return this.request(
       url,
       { ...options, method: METHODS.PUT },
@@ -33,7 +35,10 @@ export class HttpService {
     );
   };
 
-  delete = (url: string, options = {}) => {
+  delete = <TResponse>(
+    url: string,
+    options: RequestOptions = {}
+  ): Promise<TResponse> => {
     return this.request(
       url,
       { ...options, method: METHODS.DELETE },
@@ -41,10 +46,14 @@ export class HttpService {
     );
   };
 
-  request = (url: string, options = {}, timeout = 5000) => {
+  request = <TResponse>(
+    url: string,
+    options: RequestOptions = {},
+    timeout = 5000
+  ): Promise<TResponse> => {
     const { headers = {}, method, data } = options;
     const fullUrl = `${API_ENDPOINT}${this.endPoint}${url}`;
-    return new Promise(function (resolve, reject) {
+    return new Promise<TResponse>(function (resolve, reject) {
       if (!method) {
         reject("No method");
         return;
@@ -83,7 +92,12 @@ export class HttpService {
     });
   };
 }
-export function fetchWithRetry(url: string, options, endPoint): Promise<any> {
+
+export function fetchWithRetry(
+  url: string,
+  options: RequestOptions,
+  endPoint: string
+): Promise<any> {
   return new Promise((resolve, reject) => {
     let retry = options.retries || 2;
     const retryLimit = 3;

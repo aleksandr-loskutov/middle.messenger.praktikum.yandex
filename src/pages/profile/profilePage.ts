@@ -34,12 +34,12 @@ export class ProfilePage extends Component {
         onAvatarClick: () => {
             clickOnAvatarInput();
         },
-        onAvatarChange: (e: PointerEvent) => {
+        onAvatarChange: () => {
             //todo переработать
             const avatarInput = document.getElementById("avatar") as HTMLInputElement;
-            avatarInput.onchange = (e) => {
+            avatarInput.onchange = (e: HTMLInputEvent) => {
                 const {target} = e;
-                const file = (target as HTMLInputElement)?.files[0];
+                const file = target?.files[0] ;
                 if(file) {
                     this.props.store.dispatch(updateUserAvatar, file);
                 }

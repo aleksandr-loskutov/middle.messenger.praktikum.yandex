@@ -1,36 +1,35 @@
 import { BaseAPI } from "./baseAPI";
-import { CreateChatDTO } from "types/api";
+import { ChatDTO, CreateChatDTO, Token, UsersToChatDTO } from "types/api";
 
 export class ChatAPI extends BaseAPI {
   constructor() {
     super("/chats");
   }
 
-  getChats(): Promise<unknown> {
+  getChats(): ApiResponse<ChatDTO[]> {
     return this.httpService.get("", {
       headers: { "Content-Type": "application/json" }
     });
   }
-
-  createChat(data: CreateChatDTO): Promise<unknown> {
+  createChat(data: CreateChatDTO): ApiResponse<void> {
     return this.httpService.post("", {
       data,
       headers: { "Content-Type": "application/json" }
     });
   }
-  addUsersToChat(data): Promise<unknown> {
+  addUsersToChat(data: UsersToChatDTO): ApiResponse<void> {
     return this.httpService.put("/users", {
       data,
       headers: { "Content-Type": "application/json" }
     });
   }
-  removeUsersFromChat(data): Promise<unknown> {
+  removeUsersFromChat(data: UsersToChatDTO): ApiResponse<void> {
     return this.httpService.delete("/users", {
       data,
       headers: { "Content-Type": "application/json" }
     });
   }
-  getWsTokenForChat(chatId): Promise<unknown> {
+  getWsTokenForChat(chatId: number): ApiResponse<Token> {
     return this.httpService.post(`/token/${chatId}`, {
       headers: { "Content-Type": "application/json" }
     });

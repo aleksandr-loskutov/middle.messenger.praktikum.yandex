@@ -1,4 +1,4 @@
-import { UserDTO } from "types/api";
+import { PasswordsDTO, PasswordsForm, UserDTO } from "types/api";
 
 export const transformUser = (data: UserDTO): User => {
   return {
@@ -13,7 +13,7 @@ export const transformUser = (data: UserDTO): User => {
   };
 };
 
-export const transformPasswords = (data) => {
+export const transformPasswords = (data: PasswordsForm): PasswordsDTO => {
   return {
     oldPassword: data.password,
     newPassword: data.new_password

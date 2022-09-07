@@ -40,14 +40,13 @@ class Route<P = any> {
     if (!this.#component) {
       this.#component = new this.#componentClass({
         ...this.#props,
-        idParam: id,
-        _idParam: id
-      });
+        idParam: id
+      } as P & { idParam: number });
       render(this.#component);
       return;
     }
     //todo провести тесты с id параметрами и убрать _idParam
-    this.#component.setProps({ idParam: id, _idParam: id });
+    this.#component.setProps({ idParam: id });
     this.#component.show();
   }
 }
@@ -65,7 +64,7 @@ export class Router {
 
     Router.__instance = this;
   }
-  use<P>(pathname: string, block: ComponentClass<P>, props: props = {}) {
+  use<P>(pathname: string, block: ComponentClass<P> | any, props: props = {}) {
     const route = new Route(pathname, block, props);
 
     this.#routes.push(route);
@@ -73,7 +72,7 @@ export class Router {
     return this;
   }
   start() {
-    window.onpopstate = (event) => {
+    window.onpopstate = (event: PopStateEvent) => {
       this._onRoute(event.currentTarget?.location.pathname);
     };
 

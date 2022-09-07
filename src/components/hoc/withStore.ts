@@ -2,9 +2,7 @@ import { Component, Store } from "core";
 
 type WithStateProps = { store: Store<AppState> };
 
-export function withStore<P extends WithStateProps>(
-  WrappedBlock: Component<P>
-) {
+export function withStore<P extends WithStateProps>(WrappedBlock:any): Component {
   // @ts-expect-error No base constructor has the specified
   return class extends WrappedBlock<P> {
     public static componentName =
@@ -20,7 +18,6 @@ export function withStore<P extends WithStateProps>(
        * и прокидывать не целый стор, а необходимые поля
        * с помощью метода mapStateToProps
        */
-      // @ts-expect-error this is not typed
       this.setProps({ ...this.props, store: window.store });
     };
 

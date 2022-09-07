@@ -1,27 +1,27 @@
 import { BaseAPI } from "./baseAPI";
-import { LoginDTO, RegisterDTO } from "types/api";
+import { IdDTO, LoginDTO, RegisterDTO, UserDTO } from "types/api";
 
 export class AuthAPI extends BaseAPI {
   constructor() {
     super("/auth");
   }
 
-  login(data: LoginDTO): Promise<unknown> {
+  login(data: LoginDTO): ApiResponse<void> {
     return this.httpService.post("/signin", {
       data,
       headers: { "Content-Type": "application/json" }
     });
   }
-  register(data: RegisterDTO): Promise<unknown> {
+  register(data: RegisterDTO): ApiResponse<IdDTO> {
     return this.httpService.post("/signup", {
       data,
       headers: { "Content-Type": "application/json" }
     });
   }
-  getUser(): Promise<unknown> {
+  getUser(): ApiResponse<UserDTO> {
     return this.httpService.get("/user");
   }
-  logout(): Promise<unknown> {
+  logout(): ApiResponse<void> {
     return this.httpService.post("/logout");
   }
 }
