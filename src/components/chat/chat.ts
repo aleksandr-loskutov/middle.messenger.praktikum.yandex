@@ -1,39 +1,48 @@
-import Component from "core/component";
+import { Component } from "core";
+import { ChatDTO } from "types/api";
+import { displayDate } from "utils/helpers";
 
-export interface ChatProps {
-  chatName: string;
-  userAvatar: string;
-  userMessage?: boolean;
-  messageText?: string;
-  messageTime: string;
-  isChatActive: boolean;
-  chatUnreadMessages: number;
-}
+type ChatProps = {
+  chat: ChatDTO;
+  onClick?: () => void;
+  currentUser: User;
+};
 
 export class Chat extends Component {
   static componentName = "Chat";
-  constructor({ chat }: { chat: ChatProps }) {
-    super({ ...chat });
+  constructor({ chat, onClick, currentUser, ...rest }: ChatProps) {
+    super({
+      events: { click: onClick },
+      ...chat,
+      last_message: chat.last_message
+        ? {
+            ...chat.last_message,
+            simpleDate: displayDate(chat.last_message.time),
+            content:
+              chat.last_message.user?.login === currentUser.login ||
+              chat.last_message.isMine
+                ? `Вы: ${chat.last_message.content.replace("Вы: ", "")}`
+                : chat.last_message.content
+          }
+        : null,
+      ...rest
+    });
   }
-
+  componentDidMount() {
+    this.props.connect();
+  }
   render(): string {
     // language=hbs
     return `
-        {{#if isChatActive}}
-            <li class="sidebar__chat-item chat-active">
-        {{else}}
-            <li class="sidebar__chat-item">
+            <li class="sidebar__chat-item {{#if isChatActive}}chat-active{{/if}}" >
+            <img class="chat-item__avatar avatar avatar-normal"  src={{avatar}} alt="аватар {{title}}."/>
+            <span class="chat-item__chat-name">{{title}}</span>
+        {{#if last_message}}
+            <time class="chat-item__message-time" datetime="{{last_message.time}}">{{last_message.simpleDate}}</time>
+            <span class="chat-item__message-text"> {{last_message.content}} </span>
         {{/if}}
-        {{#if userAvatar}}
-                <img class="chat-item__avatar avatar avatar-normal"  src={{userAvatar}} alt="аватар {{chatName}}."/>
-        {{else}}
-
-        {{/if}}
-            <span class="chat-item__chat-name">{{chatName}}</span>
-            <time class="chat-item__message-time" datetime="{{messageTime}}+03:00">{{messageTime}}</time>
-            <span class="chat-item__message-text">{{#if userMessage}} Вы: {{/if}} {{messageText}} </span>
-        {{#if chatUnreadMessages}}
-                <span class="chat-item__message-status">{{chatUnreadMessages}}</span>
+        {{#if unread_count}}
+            {{#if isChatActive}}{{else}}<span class="chat-item__message-status">{{unread_count}}</span>{{/if}}
         {{/if}}
         </li>
     `;

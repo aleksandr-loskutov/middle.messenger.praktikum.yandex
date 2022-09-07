@@ -1,24 +1,26 @@
-import EventBus from "core/event-bus";
+import { EventBus } from "core";
 import { nanoid } from "nanoid";
 import Handlebars from "handlebars";
-
-interface ComponentMeta<P = any> {
-  props: P;
-}
+import { cloneDeep, compareObjects } from "utils/helpers";
 
 type Events = Values<typeof Component.EVENTS>;
 
-export default class Component<P = any> {
+export interface ComponentClass<P> extends Function {
+  new (props: P): Component<P>;
+  componentName?: string;
+}
+
+export class Component<P = any> {
   static EVENTS = {
     INIT: "init",
     FLOW_CDM: "flow:component-did-mount",
     FLOW_CDU: "flow:component-did-update",
+    FLOW_CWU: "flow:component-will-unmount",
     FLOW_RENDER: "flow:render"
   } as const;
 
-  static componentName: string;
+  public static componentName?: string;
   public id = nanoid(6);
-  private readonly _meta: ComponentMeta;
   protected _element: Nullable<HTMLElement> = null;
   protected readonly props: P;
   protected children: { [id: string]: Component } = {};
@@ -28,11 +30,8 @@ export default class Component<P = any> {
 
   public constructor(props?: P) {
     const eventBus = new EventBus<Events>();
-    this._meta = {
-      props
-    };
 
-    this.getStateFromProps(props);
+    this.getStateFromProps();
     this.props = this._makePropsProxy(props || ({} as P));
     this.state = this._makePropsProxy(this.state);
     this.eventBus = () => eventBus;
@@ -40,18 +39,34 @@ export default class Component<P = any> {
     eventBus.emit(Component.EVENTS.INIT, this.props);
   }
 
-  private _registerEvents(eventBus: EventBus<Events>) {
+  _checkInDom() {
+    const elementInDOM = document.body.contains(this._element);
+
+    if (elementInDOM) {
+      setTimeout(() => this._checkInDom(), 1000);
+      return;
+    }
+
+    this.eventBus().emit(Component.EVENTS.FLOW_CWU, this.props);
+  }
+
+  _registerEvents(eventBus: EventBus<Events>) {
     eventBus.on(Component.EVENTS.INIT, this.init.bind(this));
     eventBus.on(Component.EVENTS.FLOW_CDM, this._componentDidMount.bind(this));
     eventBus.on(Component.EVENTS.FLOW_CDU, this._componentDidUpdate.bind(this));
+    eventBus.on(
+      Component.EVENTS.FLOW_CWU,
+      this._componentWillUnmount.bind(this)
+    );
     eventBus.on(Component.EVENTS.FLOW_RENDER, this._render.bind(this));
   }
 
-  private _createResources() {
+  _createResources() {
     this._element = this._createDocumentElement("div");
   }
 
-  protected getStateFromProps(props: any): void {
+  //eslint-disable-next-line
+  protected getStateFromProps(): void {
     this.state = {};
   }
 
@@ -60,11 +75,19 @@ export default class Component<P = any> {
     this.eventBus().emit(Component.EVENTS.FLOW_RENDER, this.props);
   }
 
-  private _componentDidMount(props: P) {
-    this.componentDidMount(props);
+  _componentDidMount() {
+    this._checkInDom();
+    this.componentDidMount();
   }
   //eslint-disable-next-line
   componentDidMount() {}
+
+  _componentWillUnmount() {
+    this.eventBus().destroy();
+    this.componentWillUnmount();
+  }
+  //eslint-disable-next-line
+  componentWillUnmount() {}
 
   private _componentDidUpdate(oldProps: P, newProps: P) {
     const response = this.componentDidUpdate(oldProps, newProps);
@@ -74,12 +97,11 @@ export default class Component<P = any> {
     this._render();
   }
 
-  componentDidUpdate() {
-    //todo
-    return true;
+  componentDidUpdate(oldProps: P, newProps: P) {
+    return compareObjects(oldProps, newProps);
   }
 
-  setProps = (nextProps: P) => {
+  setProps = (nextProps: Partial<P>) => {
     if (!nextProps) {
       return;
     }
@@ -123,7 +145,6 @@ export default class Component<P = any> {
         }
       }, 100);
     }
-
     return this.element!;
   }
 
@@ -137,7 +158,9 @@ export default class Component<P = any> {
       set(target: Record<string, unknown>, prop: string, value: unknown) {
         target[prop] = value;
         // Запускаем обновление компоненты
-        self.eventBus().emit(Component.EVENTS.FLOW_CDU, { ...target }, target);
+        self
+          .eventBus()
+          .emit(Component.EVENTS.FLOW_CDU, cloneDeep(target), target);
         return true;
       },
       deleteProperty() {
@@ -214,7 +237,7 @@ export default class Component<P = any> {
   }
 
   show() {
-    this.getContent().style.display = "block";
+    this.getContent().style.display = "flex";
   }
 
   hide() {

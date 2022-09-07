@@ -13,7 +13,9 @@
     "components": "./src/components",
     "utils": "./src/utils",
     "css": "./src/css",
-    "types": "./src/types"
+    "types": "./src/types",
+    "services": "./src/services",
+    "api": "./src/api"
   },
   "scripts": {
     "serve": "node app.js",
@@ -22,10 +24,14 @@
   },
   "devDependencies": {
     "@parcel/transformer-sass": "2.6.2",
+    "@types/chai": "4.3.3",
+    "@types/mocha": "9.1.1",
     "@types/node": "18.6.3",
     "@typescript-eslint/eslint-plugin": "5.31.0",
     "@typescript-eslint/parser": "5.31.0",
+    "chai": "4.3.6",
     "eslint": "8.21.0",
+    "mocha": "10.0.0",
     "parcel": "2.6.2",
     "parcel-plugin-handlebars-precompile": "1.0.2",
     "prettier": "2.7.1",

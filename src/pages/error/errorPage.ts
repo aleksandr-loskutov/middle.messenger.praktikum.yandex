@@ -1,4 +1,5 @@
-import Component from "core/component";
+import { Component } from "core";
+import { withRouter, withStore } from "../../components/hoc";
 
 interface ErrorPageProps {
   errorText?: string;
@@ -8,7 +9,14 @@ export class ErrorPage extends Component {
   static componentName = "ErrorPage";
 
   constructor({ errorText, errorCode, ...rest }: ErrorPageProps) {
-    super({ errorText: "Не туда попали", errorCode: "404", ...rest });
+    super({
+      ...rest,
+      errorText: "Не туда попали",
+      errorCode: "404",
+      onBackLinkClick: () => {
+        this.props.router.go("/messenger");
+      }
+    });
   }
 
   render(): string {
@@ -18,9 +26,10 @@ export class ErrorPage extends Component {
             <div class="error-box">
                 <h1 class="error-box__title">{{errorCode}}</h1>
                 <p class="error-box__text">{{errorText}}</p>
-                <a href="/chat" class="error-box__link">Назад к чатам</a>
+                {{{Link text="Назад к чатам"  onClick=onBackLinkClick}}}
             </div>
         </main>
     `;
   }
 }
+export default withRouter(withStore(ErrorPage));

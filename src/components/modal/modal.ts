@@ -1,6 +1,7 @@
 import { ControlledInputProps } from "components/controlled-input/controlledInput";
-import Component from "core/component";
+import { Component } from "core";
 import "./modal.scss";
+import { withRouter, withStore } from "../hoc";
 
 interface ModalProps extends ControlledInputProps {
   id: string;
@@ -8,18 +9,25 @@ interface ModalProps extends ControlledInputProps {
   inputName: string;
   inputId: string;
   buttonText: string;
+  toggler?: () => void;
 }
 
-export class Modal extends Component {
+class Modal extends Component {
   static componentName = "Modal";
-  constructor(props: ModalProps) {
-    super(props);
+
+  constructor({ toggler, ...rest }: ModalProps) {
+    super({ events: { click: toggler }, ...rest });
+    this.setProps({
+      formError: () => this.props.store.getState().formError,
+      formSuccess: () => this.props.store.getState().formSuccess,
+      isLoading: () => this.props.store.getState().isLoading
+    });
   }
 
-  // language=hbs
   render(): string {
+    // language=hbs
     return `
-      <div id="{{id}}" class="modal">
+      <div id="{{id}}" class="modal hidden">
         <div class="modal__wrapper">
           <div class="modal-content">
             <h2 class="modal-content__title">{{title}}</h2>
@@ -31,7 +39,8 @@ export class Modal extends Component {
                 </label>
                   {{/if}}
                   {{{ControlledInput name=inputName class="modal-form__input form-input" placeholder=placeholder id=inputId ref=inputName validationField=validationField}}}
-                  {{{Button type="submit" class="modal-form__button button" text=buttonText icon="send" onClick=onSubmit}}}
+                  {{{Error errorText=formError successText=formSuccess}}}
+                  {{{Button type="submit" class="modal-form__button button" text=buttonText icon="send" disabled=isLoading onClick=onSubmit}}}
               </div>
             </form>
           </div>
@@ -39,3 +48,5 @@ export class Modal extends Component {
       </div>`;
   }
 }
+
+export default withRouter(withStore(Modal));

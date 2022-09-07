@@ -6,7 +6,7 @@ import Input from "./input";
 import Message from "./message";
 import Modal from "./modal";
 import Image from "./image";
-
+import Link from "./link";
 export default {
   Button,
   Input,
@@ -15,5 +15,6 @@ export default {
   Message,
   Modal,
   Error,
-  Image
+  Image,
+  Link
 };

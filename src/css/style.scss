@@ -64,20 +64,6 @@ body {
   display: none;
 }
 
-.link {
-  display: block;
-  font-size: 12px;
-  line-height: 11px;
-  font-weight: 600;
-  color: var(--blue);
-  margin-top: 14px;
-  text-align: center;
-}
-
-.link:hover {
-  text-decoration: underline;
-}
-
 /* end common */
 
 .login-box {
@@ -103,20 +89,6 @@ body {
   margin-bottom: 60px;
 }
 
-.login-form__link {
-  display: block;
-  font-size: 11px;
-  line-height: 11px;
-  font-weight: 600;
-  color: var(--blue);
-  margin-top: 14px;
-  text-align: center;
-}
-
-.login-form__link:hover {
-  text-decoration: underline;
-}
-
 /* error page */
 .main-error {
   width: 100%;
@@ -138,14 +110,7 @@ body {
   line-height: 20px;
   text-align: center;
   color: var(--black);
-  margin-bottom: 69px;
-}
-
-.error-box__link {
-  display: block;
-  font-size: 14px;
-  text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 /* sidebar chat-list */
@@ -164,14 +129,10 @@ body {
   flex-direction: column;
 }
 
-.sidebar__profile-link {
-  margin-bottom: 23px;
-  color: var(--gray);
-  text-align: right;
-}
-
-.sidebar__profile-link:visited {
-  color: var(--gray);
+.sidebar__links {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
 }
 
 .sidebar__search-input {
@@ -534,6 +495,10 @@ body {
 
 .error {
   color: var(--error);
+}
+
+.success {
+  color: var(--success);
 }
 
 .personal-image {

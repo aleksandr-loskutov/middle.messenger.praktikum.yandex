@@ -1,4 +1,4 @@
-import Component from "core/component";
+import { Component } from "core";
 
 interface ImageProps {
   type: "img" | "icon";
@@ -6,11 +6,12 @@ interface ImageProps {
   alt?: string;
   class?: string;
   icon?: string;
+  onClick?: () => void;
 }
 export class Image extends Component {
   static componentName = "Image";
-  constructor({ type = "img", ...rest }: ImageProps) {
-    super({ type, ...rest });
+  constructor({ type = "img", onClick, ...rest }: ImageProps) {
+    super({ type, events: { click: onClick }, ...rest });
   }
   // language=hbs
   render(): string {

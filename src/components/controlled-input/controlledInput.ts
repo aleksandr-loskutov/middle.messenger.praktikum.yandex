@@ -1,5 +1,5 @@
 import { validator } from "utils/validator";
-import Component from "core/component";
+import { Component } from "core";
 import { InputProps } from "../input/input";
 import { ValidationField } from "utils/validator";
 
@@ -56,7 +56,7 @@ export class ControlledInput extends Component {
                   id=id
                   layout=layout
                   type=type
-                  ref="input"
+                  ref=ref
                   name=name
                   placeholder=placeholder
                   value=value
@@ -65,6 +65,7 @@ export class ControlledInput extends Component {
                   onFocus=onFocus
                   onBlur=onBlur
                   onEnter=onEnter
+                  autofocus=autofocus
                   disabled=disabled}}}
                 <span class="{{#if errorClass}}{{errorClass}}{{else}}login-form__input-error{{/if}}">{{{Error ref="error"}}}</span>
       </div>
@@ -76,7 +77,7 @@ export class ControlledInput extends Component {
                         id=id
                         layout=layout
                         type=type
-                        ref="input"
+                        ref=ref
                         name=name
                         placeholder=placeholder
                         value=value

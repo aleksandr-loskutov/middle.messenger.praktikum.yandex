@@ -1,19 +1,31 @@
-import Component from "core/component";
+import { Component } from "core";
 import { validateData, ValidationField } from "utils/validator";
 import { getValuesFromElements } from "utils/dom";
+import { logger } from "utils";
+import { withRouter, withStore } from "components/hoc";
+import { login } from "services";
 
-export class LoginPage extends Component {
+class LoginPage extends Component {
   static componentName = "LoginPage";
 
-  constructor() {
+  constructor(props: PropsAny) {
     super({
+      ...props,
       onLogin: (e: PointerEvent) => {
         e.preventDefault();
         const loginData = getValuesFromElements.bind(this)("login", "password");
         if (validateData.bind(this)(loginData)) {
-          console.log("Данные входа:", loginData);
+          logger("Данные пользователя:", loginData);
+          this.props.store.dispatch(login, loginData);
         }
+      },
+      onRegisterLinkClick: () => {
+        this.props.router.go("/sign-up");
       }
+    });
+    this.setProps({
+      formError: () => this.props.store.getState().formError,
+      isLoading: () => this.props.store.getState().isLoading
     });
   }
 
@@ -29,11 +41,14 @@ export class LoginPage extends Component {
                 {{{ControlledInput  name="password" placeholder="Пароль"  id="password" label="Пароль" type="password" ref="password" validationField = "${ValidationField.Password}"}}}
               </div>
               <div class="login-form__buttons-block">
-                {{{Button type="submit" text="Вход" id="login-button" onClick=onLogin}}}
-                <a href="/register" class="login-form__link">Нет аккаунта?</a>
+                {{{Error errorText=formError}}}
+                {{{Button type="submit" text="Вход" id="login-button" onClick=onLogin disabled=isLoading}}}
+                {{{Link text="Нет аккаунта?" class="login-form__link" onClick=onRegisterLinkClick}}}
               </div>
             </form>
           </div>
         </main>`;
   }
 }
+
+export default withRouter(withStore(LoginPage));

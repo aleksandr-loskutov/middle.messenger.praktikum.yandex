@@ -1,11 +1,13 @@
-import Component from "core/component";
+import { Component } from "core";
 
 export class Error extends Component {
   static componentName = "Error";
-
+  constructor(props: PropsAny) {
+    super(props);
+  }
   protected render(): string {
     return `
-            <span>{{errorText}}</span>
+            <span class="{{#if errorText}}error{{/if}} {{#if successText}}success{{/if}}">{{#if errorText}}{{errorText}}{{/if}}{{#if successText}}{{successText}}{{/if}}</span>
          `;
   }
 }

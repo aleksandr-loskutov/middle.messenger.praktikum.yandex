@@ -1,12 +1,16 @@
-import Component from "core/component";
+import { Component } from "core";
 import { ValidationField, validateData } from "utils/validator";
 import { getValuesFromElements } from "utils/dom";
+import { withRouter, withStore } from "components/hoc";
+import { register } from "services";
+import { logger } from "utils";
 
 export class RegisterPage extends Component {
   static componentName = "RegisterPage";
 
-  constructor() {
+  constructor(props: PropsAny) {
     super({
+      ...props,
       onRegister: (e: PointerEvent) => {
         e.preventDefault();
         const registrationData = getValuesFromElements.bind(this)(
@@ -19,11 +23,20 @@ export class RegisterPage extends Component {
           "phone"
         );
         if (validateData.bind(this)(registrationData)) {
-          console.log("Данные регистрации:", registrationData);
+          logger("Данные регистрации:", registrationData);
+          this.props.store.dispatch(register, registrationData);
         }
+      },
+      onRegisterLinkClick: () => {
+        this.props.router.go("/");
       }
     });
+    this.setProps({
+      formError: () => this.props.store.getState().formError,
+      isLoading: () => this.props.store.getState().isLoading
+    });
   }
+
   render(): string {
     // language=hbs
     return `
@@ -41,11 +54,13 @@ export class RegisterPage extends Component {
                         {{{ControlledInput type="password" name="password_confirm" id="password_confirm" label="Пароль (еще раз)" ref="password_confirm" validationField = "${ValidationField.PasswordConfirm}"}}}
                     </div>
                     <div class="login-form__buttons-block">
-                        {{{Button type="submit" text="Зарегистрироваться" id="register-button" onClick=onRegister}}}
-                        <a href="/login" class="login-form__link">Уже есть аккаунт? Войти</a>
+                        {{{Error errorText=formError}}}
+                        {{{Button type="submit" text="Зарегистрироваться" id="register-button" onClick=onRegister disabled=isLoading}}}
+                        {{{Link text="Уже есть аккаунт? Войти" class="login-form__link" onClick=onRegisterLinkClick}}}
                     </div>
                 </form>
             </div>
         </main>`;
   }
 }
+export default withRouter(withStore(RegisterPage));

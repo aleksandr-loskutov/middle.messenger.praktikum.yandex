@@ -1,4 +1,4 @@
-import Component from "core/component";
+import { Component } from "core";
 import "./button.scss";
 
 interface ButtonProps {
@@ -6,9 +6,11 @@ interface ButtonProps {
   type?: "button" | "submit" | "reset";
   className?: string;
   onClick?: () => void;
+  disabled?: boolean;
   text?: string;
   span?: string;
   spanClass?: string;
+  wrapperClass?: string;
   icon?: string;
 }
 export class Button extends Component {
@@ -20,8 +22,8 @@ export class Button extends Component {
   render(): string {
     // language=hbs
     return `
-        <div class="button-wrapper">
-          <button  id="{{id}}" type="{{#if type}}{{type}}{{else}}button{{/if}}" class="{{#if class}}{{class}}{{else}}button{{/if}}">
+        <div class="{{#if wrapperClass}}{{wrapperClass}}{{else}}button-wrapper{{/if}}">
+          <button {{#if id}}id="{{id}}"{{/if}} type="{{#if type}}{{type}}{{else}}button{{/if}}" class="{{#if class}}{{class}}{{else}}button{{/if}}" {{#if disabled}}disabled="disabled"{{/if}}>
           {{#if text}}
               {{text}}
           {{else}}

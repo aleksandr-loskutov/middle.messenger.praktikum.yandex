@@ -1,7 +1,7 @@
 name: Docker-deploy
 on:
   push:
-    branches: [ sprint_2 ]
+    branches: [ sprint_3 ]
 jobs:
   docker-deploy:
     runs-on: self-hosted

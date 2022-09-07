@@ -1,12 +1,13 @@
 import { validationRules } from "utils/validator";
 
-export function validator(data: object, config?: object) {
+//todo нормально дотипизировать
+export function validator(data: Indexed, config?: any): Indexed {
   config = config || findRule(data);
   if (Object.keys(config).length === 0) {
     return { error: "Ошибка валидации" };
   }
-  const errors = {};
-  function validate(validateMethod: string, data: string, config: object) {
+  const errors = {} as Indexed;
+  function validate(validateMethod: string, data: any, config: any) {
     let statusValidate;
     switch (validateMethod) {
       case "isRequired": {
@@ -18,29 +19,29 @@ export function validator(data: object, config?: object) {
         break;
       }
       case "isEmail": {
-        const emailRegExp =
+        const regExp =
           /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        statusValidate = !emailRegExp.test(data);
+        statusValidate = !regExp.test(data);
         break;
       }
       case "isLogin": {
-        const emailRegExp = /^[a-zA-Z][a-zA-Z0-9-_]*$/g;
-        statusValidate = !emailRegExp.test(data);
+        const regExp = /^[a-zA-Z][a-zA-Z0-9-_]*$/g;
+        statusValidate = !regExp.test(data);
         break;
       }
       case "isPhone": {
-        const emailRegExp = /^\+?\d{10,15}$/g;
-        statusValidate = !emailRegExp.test(data);
+        const regExp = /^\+?\d{10,15}$/g;
+        statusValidate = !regExp.test(data);
         break;
       }
       case "isName": {
-        const emailRegExp = /^[a-zA-Zа-яА-ЯёЁ][a-zA-Zа-яА-ЯёЁ-]*$/g;
-        statusValidate = !emailRegExp.test(data);
+        const regExp = /^[a-zA-Zа-яА-ЯёЁ][a-zA-Zа-яА-ЯёЁ-]*$/g;
+        statusValidate = !regExp.test(data);
         break;
       }
       case "isCapitalSymbol": {
-        const capitalRegExp = /[A-Z]+/g;
-        statusValidate = !capitalRegExp.test(data);
+        const regExp = /[A-Z]+/g;
+        statusValidate = !regExp.test(data);
         break;
       }
       case "isContainDigit": {
@@ -83,7 +84,7 @@ export function validator(data: object, config?: object) {
   return errors;
 }
 
-function findRule(data) {
+function findRule(data: Indexed) {
   for (const fieldName in data) {
     if (Object.prototype.hasOwnProperty.call(validationRules, fieldName)) {
       return { [fieldName]: validationRules[fieldName] };
@@ -92,7 +93,7 @@ function findRule(data) {
   return {};
 }
 
-export function validateData(data): boolean {
+export function validateData(data: Indexed): boolean {
   const errors = {
     ...validator(data, validationRules),
     ...comparePasswords(data)
@@ -109,7 +110,7 @@ export function validateData(data): boolean {
   return false;
 }
 
-function comparePasswords(data) {
+function comparePasswords(data: Indexed): Indexed {
   let passwordErrors = {};
   if (
     Object.prototype.hasOwnProperty.call(data, "password") &&

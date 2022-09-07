@@ -1,0 +1,54 @@
+.link-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.link {
+  display: block;
+  font-size: 12px;
+  line-height: 11px;
+  font-weight: 600;
+  color: var(--blue);
+  margin-top: 14px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.login-form__link {
+  display: block;
+  font-size: 11px;
+  line-height: 11px;
+  font-weight: 600;
+  color: var(--blue);
+  margin-top: 14px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.login-form__link:hover {
+  text-decoration: underline;
+}
+
+.sidebar__profile-link {
+  margin-bottom: 23px;
+  color: var(--gray);
+  text-align: right;
+  cursor: pointer;
+}
+
+.sidebar__profile-link:visited {
+  color: var(--gray);
+}
+
+.error-box__link {
+  display: block;
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
