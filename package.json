@@ -22,8 +22,18 @@
     "build": "webpack --node-env=production",
     "build-dev": "webpack",
     "serve": "node app.js",
-    "clear": "rd /s /q dist"
+    "test": "",
+    "lint": "eslint --ext .js,.ts --fix ./src --ignore-pattern node_modules/",
+    "stylelint": "stylelint --fix \"./src/**/*.scss\"",
+    "lint:all": "npm run lint && npm run stylelint",
+    "clear": "rd /s /q dist",
+    "prepare": "husky install"
   },
+    "husky": {
+        "hooks": {
+            "pre-commit": "npm run lint:all"
+        }
+    },
   "devDependencies": {
     "@types/chai": "4.3.3",
     "@types/mocha": "9.1.1",
@@ -34,6 +44,7 @@
     "css-loader": "6.7.1",
     "eslint": "8.21.0",
     "html-webpack-plugin": "5.5.0",
+    "husky": "8.0.1",
     "image-webpack-loader": "8.1.0",
     "mini-css-extract-plugin": "2.6.1",
     "mocha": "10.0.0",
