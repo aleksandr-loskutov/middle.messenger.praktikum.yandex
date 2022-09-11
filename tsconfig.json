@@ -11,6 +11,16 @@
     "noUnusedParameters": true,
     "sourceMap": true,
     "baseUrl": "./src",
-    "typeRoots": ["node_modules/@types", "types/app.d.ts"]
+    "typeRoots": ["node_modules/@types", "types/app.d.ts"],
+      "paths": {
+          "core/*": ["core/*"],
+          "pages/*": ["pages/*"],
+          "components/*": ["components/*"],
+          "utils/*": ["utils/*"],
+          "css/*": ["css/*"],
+          "types/*": ["types/*"],
+          "services/*": ["services/*"],
+          "api/*": ["api/*"]
+      }
   }
 }
