@@ -52,7 +52,9 @@ export class HttpService {
     timeout = 5000
   ): Promise<TResponse> => {
     const { headers = {}, method, data } = options;
-    const fullUrl = `${API_ENDPOINT}${this.endPoint}${url}`;
+    const fullUrl = this.endPoint.includes("://")
+      ? `${this.endPoint}`
+      : `${API_ENDPOINT}${this.endPoint}${url}`;
     return new Promise<TResponse>(function (resolve, reject) {
       if (!method) {
         reject("No method");
@@ -68,10 +70,17 @@ export class HttpService {
       });
 
       xhr.onload = function () {
-        if ((xhr.status >= 400 && xhr.status < 500) || xhr.status === 200) {
-          resolve(xhr.response);
+        if (xhr.status === 200) {
+          resolve({
+            data: xhr.response,
+            status: xhr.status
+          });
         } else {
-          reject(xhr.response);
+          resolve({
+            ...xhr.response,
+            status: xhr.status,
+            data: undefined
+          });
         }
       };
 
