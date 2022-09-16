@@ -124,7 +124,7 @@ body {
   width: 310px;
   background-color: var(--light-gray-second);
   border: 1px solid var(--light-gray);
-  padding: 21px 10px 10px;
+  padding: 21px 0 10px 5px;
   display: flex;
   flex-direction: column;
 }
@@ -132,7 +132,7 @@ body {
 .sidebar__links {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
 }
 
 .sidebar__search-input {
@@ -178,7 +178,7 @@ body {
   cursor: pointer;
   transition: background 0.2s;
   display: grid;
-  grid-template-columns: 47px 193px 25px;
+  grid-template-columns: 47px 185px 35px;
   grid-template-areas:
     "avatar name date"
     "avatar message status";
@@ -271,15 +271,20 @@ body {
 }
 
 .chat-options {
+  display: none;
   background-color: var(--white);
   min-width: 220px;
   padding: 15px;
-  right: 7px;
-  top: 45px;
+  right: 15px;
+  top: 15px;
   position: absolute;
   border: 1px solid transparent;
   border-radius: 12px;
   box-shadow: 0 0 6px var(--box-shadow);
+}
+
+.chat-userbar__info:hover .chat-options {
+  display: block;
 }
 
 .chat-userbar__options-button {
@@ -370,14 +375,19 @@ body {
 }
 
 .attach-options {
+  display: none;
   background-color: var(--white);
   min-width: 220px;
   padding: 15px;
-  top: -155px;
+  top: -125px;
   position: absolute;
   border: 1px solid transparent;
   border-radius: 12px;
   box-shadow: 0 0 6px var(--box-shadow);
+}
+
+.action-bar__file:hover .attach-options {
+  display: block;
 }
 
 .sidebar-with-back-btn {

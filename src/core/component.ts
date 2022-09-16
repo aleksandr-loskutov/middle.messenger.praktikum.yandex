@@ -1,4 +1,4 @@
-import { EventBus } from "core";
+import EventBus from "core/event-bus";
 import { nanoid } from "nanoid";
 import Handlebars from "handlebars";
 import { cloneDeep, compareObjects } from "utils/helpers";

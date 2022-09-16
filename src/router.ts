@@ -1,7 +1,7 @@
 import { Router } from "core";
 import { getPageComponent, Pages } from "pages";
 
-const routes = [
+export const routes = [
   {
     path: "/",
     component: Pages.Login,

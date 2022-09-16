@@ -23,7 +23,8 @@ module.exports = {
     path: getPath("dist"),
     clean: true,
     filename: "[name].[contenthash].js",
-    assetModuleFilename: "assets/[name][ext]"
+    assetModuleFilename: "assets/[name][ext]",
+    publicPath: "/"
   },
   resolve: {
     alias: {

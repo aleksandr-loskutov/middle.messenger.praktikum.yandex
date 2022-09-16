@@ -1,5 +1,6 @@
 import { APIError, ChatDTO } from "types/api";
 import { DEBUG } from "./consts";
+import { reloadPage } from "utils/dom";
 
 export function hasError(response: any): response is APIError {
   return response && response.reason;
@@ -104,7 +105,7 @@ export const createImageFromInitials = (
   return canvas.toDataURL();
 };
 
-export function displayDate(date: string): string {
+export function displayDate(date: string, short = false): string {
   const dateObj = new Date(date);
   const today = new Date();
   const yesterday = new Date(today.setDate(today.getDate() - 1));
@@ -116,12 +117,24 @@ export function displayDate(date: string): string {
     const minutesPrefix = dateObj.getMinutes() < 10 ? "0" : "";
     return `${dateObj.getHours()}:${minutesPrefix}${dateObj.getMinutes()}`;
   } else {
-    return dateObj.toLocaleDateString();
+    return short
+      ? dateObj.toLocaleDateString(undefined, {
+          month: "short",
+          day: "numeric"
+        })
+      : dateObj.toLocaleDateString(undefined, {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+          hour: "numeric",
+          minute: "numeric"
+        });
   }
 }
 
 export function setDefaultAvatars(chats: ChatDTO[]): ChatDTO[] {
   if (!chats) return [];
+  console.log("chats", chats);
   return chats.map((chat) => {
     if (!chat.avatar) {
       return { ...chat, avatar: createImageFromInitials(100, chat.title) };
@@ -205,7 +218,7 @@ export function cloneDeep<T extends object = object>(obj: T) {
 }
 
 //todo рефакторинг
-export function connectWebSocket(url: string): Promise<WebSocket> {
+export function createWebSocket(url: string): Promise<WebSocket> {
   return new Promise(function (resolve, reject) {
     const socket = new WebSocket(url);
 
@@ -223,6 +236,9 @@ export function connectWebSocket(url: string): Promise<WebSocket> {
           logger("Обрыв соединения");
         }
         logger(`Код: ${event.code} | Причина: ${event.reason}`);
+        //todo нужно переписать логику работы с сокетами для гибкого управления их состояниями
+        //для разработки пока так
+        reloadPage();
       });
 
       const ping = () => {

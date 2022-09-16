@@ -1,6 +1,7 @@
 import { Component } from "core";
 import { ChatDTO } from "types/api";
 import { displayDate } from "utils/helpers";
+import { scrollToBottom } from "utils/dom";
 
 type ChatProps = {
   chat: ChatDTO;
@@ -17,7 +18,7 @@ export class Chat extends Component {
       last_message: chat.last_message
         ? {
             ...chat.last_message,
-            simpleDate: displayDate(chat.last_message.time),
+            simpleDate: displayDate(chat.last_message.time, true),
             content:
               chat.last_message.user?.login === currentUser.login ||
               chat.last_message.isMine
@@ -30,6 +31,7 @@ export class Chat extends Component {
   }
   componentDidMount() {
     this.props.connect();
+    scrollToBottom();
   }
   render(): string {
     // language=hbs
