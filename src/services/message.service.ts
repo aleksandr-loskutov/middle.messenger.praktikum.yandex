@@ -1,8 +1,10 @@
 import { ChatAPI } from "api";
 import type { Dispatch } from "core";
-import { logger, connectWebSocket } from "utils";
+import { logger, createWebSocket } from "utils";
 import { WS_ENDPOINT } from "utils/consts";
-import { ChatDTO, MessageDTO, Token } from "types/api";
+import { ChatDTO, MessageDTO } from "types/api";
+import { setDefaultAvatars } from "utils/helpers";
+import { scrollToBottom } from "utils/dom";
 
 export async function connectChats(
   dispatch: Dispatch<AppState>,
@@ -18,14 +20,15 @@ export async function connectChats(
   const api = new ChatAPI();
   const chatsWithTokens = await Promise.all(
     chats.map(async (chat) => {
-      const { token } = (await api.getWsTokenForChat(chat.chatId)) as Token;
+      const { data } = await api.getWsTokenForChat(chat.chatId);
+      const token = data?.token;
       return {
         ...chat,
         token
       };
     })
   );
-  //для каждого чата подключаемся к вебсокету
+  // для каждого чата подключаемся к вебсокету
   const chatsWithSockets = await Promise.all(
     chatsWithTokens.map(async (chat) => {
       const socket = (await connectChatToSocket.bind(this)(
@@ -36,12 +39,50 @@ export async function connectChats(
     })
   );
   //todo - сделать проверку на то, что все чаты подключены
+  //todo - авто восстановление сокетов при разрыве
   dispatch({
     isChatsLoaded: true,
     isChatsLoading: false,
     isLoading: false,
     tokens: chatsWithSockets
   });
+}
+
+//used after create new chat
+export function connectOneChat(
+  dispatch: Dispatch<AppState>,
+  state: AppState,
+  data: { chatId: number; chats: ChatDTO[] }
+) {
+  const { chatId, chats } = data;
+  const api = new ChatAPI();
+  api
+    .getWsTokenForChat(chatId)
+    .then((res) => {
+      const token = res.data?.token;
+      connectChatToSocket
+        .bind(this)(chatId, token)
+        .then((socket: WebSocket) => {
+          dispatch({
+            isChatsLoading: false,
+            isLoading: false,
+            formError: null,
+            chats: setDefaultAvatars(chats || []),
+            tokens: [
+              ...state.tokens,
+              {
+                chatId,
+                token,
+                socket
+              }
+            ]
+          });
+        });
+    })
+    .catch((err) => {
+      logger("connectOneChat", err);
+      dispatch({ isChatsLoading: false, isLoading: false });
+    });
 }
 
 export async function connectChatToSocket(
@@ -51,10 +92,9 @@ export async function connectChatToSocket(
   const userId = this.props.store.getState().user.id;
 
   try {
-    const socket = await connectWebSocket(
+    const socket = await createWebSocket(
       `${WS_ENDPOINT}${userId}/${chatId}/${token}`
     );
-
     //инициирующий запрос на получение последних 20 сообщений
     socket.send(
       JSON.stringify({
@@ -106,6 +146,7 @@ export async function connectChatToSocket(
                 [chatId]: [data, ...currentChatMessages]
               }
             });
+            scrollToBottom();
             break;
           case "error":
             logger(
