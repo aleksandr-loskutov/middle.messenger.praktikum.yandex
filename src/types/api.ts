@@ -1,5 +1,7 @@
 export type APIError = {
   reason: string;
+  status?: number;
+  data?: undefined;
 };
 
 export type UserDTO = {
@@ -121,6 +123,15 @@ export type ByLoginDTO = {
 
 export type ChatToken = {
   chatId: number;
-  token: string;
+  token: string | undefined;
   socket: WebSocket;
+};
+
+export type DeletedChatDTO = {
+  userId: number;
+  result: {
+    id: number;
+    title: string;
+    avatar: string;
+  };
 };
