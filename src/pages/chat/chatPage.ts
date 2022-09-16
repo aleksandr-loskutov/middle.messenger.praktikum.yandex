@@ -6,13 +6,13 @@ import { createChat } from "services";
 import {
   MODAL_ADD_USER_ID,
   MODAL_CREATE_CHAT_ID,
+  MODAL_DELETE_CHAT_ID,
   MODAL_DELETE_USER_ID
 } from "utils/consts";
 import {
   getValuesFromElements,
-  toggleAttachWindow,
   createModalToggler,
-  toggleOptionsWindow
+  scrollToBottom
 } from "utils/dom";
 import {
   addUsersToChat,
@@ -20,11 +20,13 @@ import {
   searchUserByLogin
 } from "services/user.service";
 import { connectChats, setReaded } from "services/message.service";
-import { ChatDTO, ChatToken, MessageDTO } from "../../types/api";
+import { ChatDTO, ChatToken, MessageDTO } from "types/api";
+import { deleteChat } from "services/chat.service";
 
 const toggleChatModal = createModalToggler(MODAL_CREATE_CHAT_ID);
 const toggleAddUserModal = createModalToggler(MODAL_ADD_USER_ID);
 const toggleDeleteUserModal = createModalToggler(MODAL_DELETE_USER_ID);
+const toggleDeleteChatModal = createModalToggler(MODAL_DELETE_CHAT_ID);
 
 export class ChatPage extends Component {
   static componentName = "ChatPage";
@@ -32,10 +34,9 @@ export class ChatPage extends Component {
     super({
       ...props,
       toggleChatModal,
-      toggleAttachWindow,
       toggleAddUserModal,
       toggleDeleteUserModal,
-      toggleOptionsWindow,
+      toggleDeleteChatModal,
       onSendMessage: (e: PointerEvent) => {
         e.preventDefault();
         const messageData = getValuesFromElements.bind(this)("message");
@@ -56,7 +57,7 @@ export class ChatPage extends Component {
             ) as HTMLInputElement;
             input.value = "";
           } else {
-            logger(`Нет соединения с сокетом для чата ${chatId}`);
+            logger(`Нет сокета для чата ${chatId}`);
           }
         }
       },
@@ -116,10 +117,16 @@ export class ChatPage extends Component {
         const chatToCreate = getValuesFromElements.bind(this)("#chat-create");
         if (validateData.bind(this)(chatToCreate)) {
           logger("Запрос на создание чата:", chatToCreate);
-          this.props.store.dispatch(createChat, {
+          this.props.store.dispatch(createChat.bind(this), {
             title: chatToCreate.chat_title
           });
         }
+      },
+      onDeleteChat: (e: PointerEvent) => {
+        e.preventDefault();
+        this.props.store.dispatch(deleteChat, {
+          chatId: this.props.idParam
+        });
       }
     });
 
@@ -131,6 +138,7 @@ export class ChatPage extends Component {
             link: () => {
               this.props.router.go(`/messenger/${chat.id}`);
               this.props.store.dispatch(setReaded.bind(this));
+              scrollToBottom();
             },
             isChatActive: () => chat.id === this.props.idParam,
             connect: () => {
@@ -146,6 +154,9 @@ export class ChatPage extends Component {
       },
       formError: () => this.props.store.getState().formError,
       isLoading: () => this.props.store.getState().isLoading,
+      isChatsLoading: () =>
+        this.props.store.getState().isLoading ||
+        this.props.store.getState().isChatsLoading,
       messages: () => {
         const chatId = this.props.idParam;
         const messages = this.props.store.getState().chatMessages;
@@ -167,7 +178,8 @@ export class ChatPage extends Component {
   render(): string {
     //language=hbs
     return `
-        <main class="main-chat">
+        <main class="main-chat relative">
+            {{#if isChatsLoading}}{{{Spinner type="image"}}}{{/if}}
             <div class="sidebar">
                 <div class="sidebar__links">
                     {{{Link text="Создать чат +" class="sidebar__profile-link" onClick=onChatCreateLinkClick}}}
@@ -191,14 +203,17 @@ export class ChatPage extends Component {
                                {{/with}}
                             </div>
                             <div class="chat-userbar__info relative">
-                                {{{Button id="chat-options-button" class="chat-userbar__options-button" icon="options" onClick=toggleOptionsWindow}}}
-                                <div class="chat-options hidden" id="chat-options">
+                                {{{Button id="chat-options-button" class="chat-userbar__options-button" icon="options"}}}
+                                <div class="chat-options" id="chat-options">
                                     <ul class="chat-options__list">
                                         <li class="chat-options__item">
-                                            {{{Button type="submit" id="chat-options-add-user" class="chat-options__button" icon="addUser" onClick=toggleAddUserModal span="Добавить пользователя" spanClass="chat-options__row-text"}}}
+                                            {{{Button type="submit" class="chat-options__button" icon="addUser" onClick=toggleAddUserModal span="Добавить пользователя" spanClass="chat-options__row-text"}}}
                                         </li>
                                         <li class="chat-options__item">
-                                            {{{Button type="submit" id="chat-options-add-user" class="chat-options__button" icon="deleteUser" onClick=toggleDeleteUserModal span="Удалить пользователя" spanClass="chat-options__row-text"}}}
+                                            {{{Button type="submit" class="chat-options__button" icon="deleteUser" onClick=toggleDeleteUserModal span="Удалить пользователя" spanClass="chat-options__row-text"}}}
+                                        </li>
+                                        <li class="chat-options__item">
+                                            {{{Button type="submit" class="chat-options__button" icon="deleteUser" onClick=toggleDeleteChatModal span="Удалить чат" spanClass="chat-options__row-text"}}}
                                         </li>
                                     </ul>
                                 </div>
@@ -214,8 +229,8 @@ export class ChatPage extends Component {
                         </div>
                         <div class="action-bar">
                             <div class="action-bar__file relative">
-                                {{{Button type="button" id="chat-attach-button" class="action-bar__file-button" icon="attach" onClick=toggleAttachWindow }}}
-                                <div class="attach-options hidden" id="attach-options">
+                                {{{Button type="button" id="chat-attach-button" class="action-bar__file-button" icon="attach" }}}
+                                <div class="attach-options" id="attach-options">
                                     <ul class="chat-options__list">
                                         <li class="chat-options__item">
                                             {{{Button type="button" class="chat-options__button" icon="media" span="Фото или Видео" spanClass="chat-options__row-text"}}}
@@ -254,9 +269,10 @@ export class ChatPage extends Component {
                     >
                 {{/if}}
             </div>
-            {{{Modal id="modal-create-chat" toggler=toggleChatModal  inputName="chat_title" title="Создать чат" label="Название чата" inputId="chat-create" type="text" placeholder="супер чат" buttonText="Создать" onSubmit=onCreateChat validationField="${ValidationField.ChatTitle}"}}}
-            {{{Modal id="modal-add-user" toggler=toggleAddUserModal inputName="user_to_add" title="Добавить пользователя" label="Логин" inputId="add-user-name" type="text" placeholder="ivan" buttonText="Добавить" onSubmit=onAddUser validationField="${ValidationField.UserToAdd}"}}}
-            {{{Modal id="modal-delete-user" toggler=toggleDeleteUserModal inputName="user_to_delete" title="Удалить пользователя"  label="Логин" inputId="delete-user-name" type="text" placeholder="ivan" buttonText="Удалить"  onSubmit=onDeleteUser validationField="${ValidationField.UserToDelete}"}}}
+            {{{Modal id='${MODAL_CREATE_CHAT_ID}'  toggler=toggleChatModal  inputName="chat_title" title="Создать чат" label="Название чата" inputId="chat-create" type="text" placeholder="супер чат" buttonText="Создать" onSubmit=onCreateChat validationField="${ValidationField.ChatTitle}"}}}
+            {{{Modal id='${MODAL_ADD_USER_ID}'  toggler=toggleAddUserModal inputName="user_to_add" title="Добавить пользователя" label="Логин" inputId="add-user-name" type="text" placeholder="ivan" buttonText="Добавить" onSubmit=onAddUser validationField="${ValidationField.UserToAdd}"}}}
+            {{{Modal id='${MODAL_DELETE_USER_ID}'  toggler=toggleDeleteUserModal inputName="user_to_delete" title="Удалить пользователя"  label="Логин" inputId="delete-user-name" type="text" placeholder="ivan" buttonText="Удалить"  onSubmit=onDeleteUser validationField="${ValidationField.UserToDelete}"}}}
+            {{{Modal id='${MODAL_DELETE_CHAT_ID}'  toggler=toggleDeleteChatModal inputName="chat_to_delete" title="Удалить чат?"  confirmMode=true label="Чат" inputId="delete-chat" type="text" placeholder="ivan" buttonText="Удалить"  onSubmit=onDeleteChat}}}
         </main>
 
     `;
