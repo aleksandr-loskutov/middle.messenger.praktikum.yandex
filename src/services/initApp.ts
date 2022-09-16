@@ -2,13 +2,16 @@ import { AuthAPI, ChatAPI } from "api";
 import type { Dispatch } from "core";
 import { transformUser, apiHasError, logger } from "utils";
 import { setDefaultAvatars } from "utils/helpers";
+import { routes } from "../router";
+import { addLocationObserver, clearErrorsAndSuccess } from "utils/dom";
 
 export async function initApp(dispatch: Dispatch<AppState>) {
   try {
-    const user = await new AuthAPI().getUser();
-    const chats = await new ChatAPI().getChats();
-    if (apiHasError(user) || apiHasError(chats)) {
-      logger("unAuthed or api error");
+    const userRes = await new AuthAPI().getUser();
+    const user = userRes.data;
+    if (!user || apiHasError(user)) {
+      logger("unAuthed");
+      window.router.go("/");
       dispatch({
         user: null,
         chats: [],
@@ -16,12 +19,29 @@ export async function initApp(dispatch: Dispatch<AppState>) {
       });
       return;
     }
+    const chatsRes = await new ChatAPI().getChats();
+    const chats = setDefaultAvatars(chatsRes.data || []);
     logger("authed");
     dispatch({
       user: transformUser(user),
-      chats: setDefaultAvatars(chats),
+      chats,
       chatMessages: []
     });
+
+    //редиректы для авторизованных пользователей
+    const currentPathName = window.router.currentRoute?.pathname;
+    if (currentPathName) {
+      const currentRoute = routes.find((route) =>
+        route.path.includes(currentPathName)
+      );
+      if (
+        currentRoute &&
+        !currentRoute.shouldAuthorized &&
+        currentRoute.path !== "*"
+      ) {
+        window.router.go("/messenger");
+      }
+    }
   } catch (err) {
     logger("initApp api error", err);
     dispatch({
@@ -29,7 +49,9 @@ export async function initApp(dispatch: Dispatch<AppState>) {
       chats: [],
       chatMessages: []
     });
+    window.router.go("/");
   } finally {
     dispatch({ appIsInited: true });
+    addLocationObserver(clearErrorsAndSuccess);
   }
 }
