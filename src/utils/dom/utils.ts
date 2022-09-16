@@ -1,12 +1,5 @@
-export function toggleOptionsWindow() {
-  document.getElementById("chat-options")?.classList.toggle("hidden");
-  document
-    .getElementById("chat-options-button")
-    ?.classList.toggle("options-button-active");
-}
-export function toggleAttachWindow() {
-  document.getElementById("attach-options")?.classList.toggle("hidden");
-}
+import { logger } from "utils/helpers";
+import { CHAT_MESSAGES_BOX_CLASS } from "utils/consts";
 
 export function clickOnAvatarInput() {
   //временное решение
@@ -16,17 +9,62 @@ export function clickOnAvatarInput() {
 
 export function createModalToggler(modalId: string) {
   const _modalId = modalId;
-
   return (event: PointerEvent) => {
     const { target } = event;
     if ((target as HTMLElement).classList.contains("modal__wrapper")) {
       const { parentElement } = target;
       parentElement.classList.toggle("hidden");
+      deleteSearchParams("modal");
     } else {
       const el = document.getElementById(_modalId) as HTMLElement;
-      el.classList.contains("hidden") && el.classList.toggle("hidden");
+      el.classList.contains("hidden") && el.classList.remove("hidden");
+      setSearchParams("modal", _modalId.replace("modal-", ""));
     }
+    clearErrorsAndSuccess();
   };
+}
+
+export function clearError() {
+  const els = document.querySelectorAll(".error");
+  if (els.length > 0) {
+    els.forEach((el) => {
+      el.innerHTML = "";
+    });
+  }
+}
+
+export function clearSuccess() {
+  const els = document.querySelectorAll(".success");
+  if (els.length > 0) {
+    els.forEach((el) => {
+      el.innerHTML = "";
+    });
+  }
+}
+
+export function clearErrorsAndSuccess() {
+  clearError();
+  clearSuccess();
+}
+
+export function setSearchParams(key: string, value: string): void {
+  if ("URLSearchParams" in window) {
+    const searchParams = new URLSearchParams(window.location.search);
+    searchParams.set(key, value);
+    const newRelativePathQuery =
+      window.location.pathname + "?" + searchParams.toString();
+    history.pushState(null, "", newRelativePathQuery);
+  }
+}
+
+export function deleteSearchParams(key: string): void {
+  if ("URLSearchParams" in window) {
+    const searchParams = new URLSearchParams(window.location.search);
+    searchParams.delete(key);
+    const newRelativePathQuery =
+      window.location.pathname + searchParams.toString();
+    history.pushState(null, "", newRelativePathQuery);
+  }
 }
 
 export function getValuesFromElements(...names: string[]): object {
@@ -45,4 +83,29 @@ export function getValuesFromElements(...names: string[]): object {
     }
   });
   return data;
+}
+
+export function addLocationObserver(onLocationChange: () => void) {
+  let previousUrl = "";
+
+  const observer = new MutationObserver(() => {
+    if (window.location.href !== previousUrl) {
+      logger(`URL changed from ${previousUrl} to ${window.location.href}`);
+      previousUrl = window.location.href;
+      if (onLocationChange) onLocationChange();
+    }
+  });
+  const config = { subtree: true, childList: true };
+
+  observer.observe(document, config);
+}
+
+export function reloadPage() {
+  window.location.reload();
+}
+
+export function scrollToBottom() {
+  const scrollingElement = document.querySelector(CHAT_MESSAGES_BOX_CLASS);
+  if (scrollingElement)
+    scrollingElement.scrollTop = scrollingElement.scrollHeight;
 }
