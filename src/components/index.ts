@@ -7,6 +7,7 @@ import Message from "./message";
 import Modal from "./modal";
 import Image from "./image";
 import Link from "./link";
+import Spinner from "./spinner";
 export default {
   Button,
   Input,
@@ -16,5 +17,6 @@ export default {
   Modal,
   Error,
   Image,
-  Link
+  Link,
+  Spinner
 };

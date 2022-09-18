@@ -1,17 +1,9 @@
-import { Component, ComponentClass } from "./component";
+import { Component } from "./component";
 import EventBus from "./event-bus";
 import registerComponent from "./registerComponent";
 import render from "./render";
 import { Router } from "./router";
-import { Store, Dispatch } from "./store";
-
-export {
-  Component,
-  ComponentClass,
-  EventBus,
-  registerComponent,
-  render,
-  Router,
-  Store,
-  Dispatch
-};
+import { Store } from "./store";
+export type { ComponentClass } from "./component";
+export type { Dispatch } from "./store";
+export { Component, EventBus, registerComponent, render, Router, Store };

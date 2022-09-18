@@ -23,11 +23,12 @@ export const updateUserData = async (
     dispatch({ isLoading: false, formError: response.reason });
     return;
   }
+  const user = response?.data || {};
   dispatch({
     isLoading: false,
     formError: null,
     formSuccess: "Данные успешно обновлены",
-    user: transformUser(response)
+    user: transformUser(user)
   });
 };
 
@@ -65,7 +66,7 @@ export const updateUserAvatar = async (
     return;
   }
 
-  const { avatar } = response;
+  const avatar = response?.data?.avatar;
   const { user } = state;
   if (avatar && user) {
     dispatch({
@@ -89,12 +90,12 @@ export const searchUserByLogin = async (
 ): Promise<UserDTO | APIError> => {
   const api = new UserAPI();
   const response = await api.searchUsers(payload);
-  if (Array.isArray(response)) {
-    if (response.length === 0) {
+  if (Array.isArray(response.data)) {
+    if (response.data.length === 0) {
       return { reason: "Пользователь не найден" };
     }
     const { login } = payload;
-    const user = response.find(
+    const user = response?.data?.find(
       (user) => user.login.toLowerCase() === login.toLowerCase()
     );
     if (user) {

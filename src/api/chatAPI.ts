@@ -1,5 +1,11 @@
 import { BaseAPI } from "./baseAPI";
-import { ChatDTO, CreateChatDTO, Token, UsersToChatDTO } from "types/api";
+import {
+  ChatDTO,
+  CreateChatDTO,
+  DeletedChatDTO,
+  Token,
+  UsersToChatDTO
+} from "types/api";
 
 export class ChatAPI extends BaseAPI {
   constructor() {
@@ -13,6 +19,12 @@ export class ChatAPI extends BaseAPI {
   }
   createChat(data: CreateChatDTO): ApiResponse<void> {
     return this.httpService.post("", {
+      data,
+      headers: { "Content-Type": "application/json" }
+    });
+  }
+  deleteChat(data: { chatId: number }): ApiResponse<DeletedChatDTO> {
+    return this.httpService.delete("", {
       data,
       headers: { "Content-Type": "application/json" }
     });

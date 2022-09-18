@@ -3,7 +3,7 @@ export {
   isEqual,
   hasError as apiHasError,
   logger,
-  connectWebSocket,
+  createWebSocket,
   fileToFormData,
   sanitizeString
 } from "./helpers";

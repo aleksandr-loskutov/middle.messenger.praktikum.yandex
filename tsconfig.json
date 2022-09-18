@@ -11,6 +11,23 @@
     "noUnusedParameters": true,
     "sourceMap": true,
     "baseUrl": "./src",
-    "typeRoots": ["node_modules/@types", "types/app.d.ts"]
-  }
+    "typeRoots": ["node_modules/@types", "types/app.d.ts"],
+    "importHelpers": true,
+      "paths": {
+          "src/*": ["./src/*"],
+          "core/*": ["./core/*"],
+          "pages/*": ["./pages/*"],
+          "components/*": ["./components/*"],
+          "utils/*": ["./utils/*"],
+          "css/*": ["./css/*"],
+          "types/*": ["./types/*"],
+          "services/*": ["./services/*"],
+          "api/*": ["./api/*"]
+      }
+  },
+    "ts-node": {
+        "transpileOnly": true
+    },
+    "include": ["src/**/*.ts"],
+    "exclude": ["node_modules", "dist", "index.js"]
 }

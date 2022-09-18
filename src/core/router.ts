@@ -1,4 +1,5 @@
-import { Component, ComponentClass, render } from "core";
+import { Component, ComponentClass } from "core/component";
+import render from "core/render";
 import { isEqual } from "utils/helpers";
 type props = Record<string, any>;
 
@@ -20,10 +21,12 @@ class Route<P = any> {
       this.render();
     }
   }
+  get pathname(): string {
+    return this.#pathname;
+  }
   leave() {
     if (this.#component) {
       this.#component.hide();
-      this.#component = null;
     }
   }
   match(pathname: string) {
@@ -45,7 +48,6 @@ class Route<P = any> {
       render(this.#component);
       return;
     }
-    //todo провести тесты с id параметрами и убрать _idParam
     this.#component.setProps({ idParam: id });
     this.#component.show();
   }
@@ -102,6 +104,15 @@ export class Router {
 
   forward() {
     this.#history.forward();
+  }
+  get currentRoute(): Route | null {
+    return this.#currentRoute;
+  }
+
+  get searchParams(): URLSearchParams {
+    return new Proxy(new URLSearchParams(window.location.search), {
+      get: (searchParams, prop) => searchParams.get(prop)
+    });
   }
 
   getRoute(pathname: string): Route | undefined {
