@@ -3,15 +3,15 @@
 ![Build status](https://github.com/aleksandr-loskutov/middle.messenger.praktikum.yandex/actions/workflows/docker-deploy.yml/badge.svg)
 
 Приложение веб-чат с возможностью регистрации и переписки (MVP).
-Доступно [по ссылке](http://aleksandrl.ru:1501/).
+Доступно [по ссылке](https://messenger.aleksandrl.ru/).
 
 Страницы:
 
-- [Вход](http://aleksandrl.ru:1501/)
-- [Регистрация](http://aleksandrl.ru:1501/sign-up)
-- [Чат](http://aleksandrl.ru:1501/messenger)
-- [Профиль](http://aleksandrl.ru:1501/settings)
-- [404](http://aleksandrl.ru:1501/404)
+- [Вход](https://messenger.aleksandrl.ru/)
+- [Регистрация](https://messenger.aleksandrl.ru/sign-up)
+- [Чат](https://messenger.aleksandrl.ru/messenger)
+- [Профиль](https://messenger.aleksandrl.ru/settings)
+- [404](https://messenger.aleksandrl.ru/404)
 
 ## Установка
 
