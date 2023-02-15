@@ -16,6 +16,10 @@
   transition: background 0.2s;
 }
 
+.button-gray {
+  background: var(--gray);
+}
+
 .button:hover {
   background: var(--blue-hover);
 }

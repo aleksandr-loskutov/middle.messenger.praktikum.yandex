@@ -181,16 +181,14 @@ export class ChatPage extends Component {
         <main class="main-chat relative">
             {{#if isChatsLoading}}{{{Spinner type="image"}}}{{/if}}
             <div class="sidebar">
-                <div class="sidebar__links">
-                    {{{Link text="Создать чат +" class="sidebar__profile-link" onClick=onChatCreateLinkClick}}}
-                    {{{Link text="Профиль >" class="sidebar__profile-link" onClick=onProfileLinkClick}}}
-                </div>
+                    {{{Button  type="button" text="профиль"  class="button button-gray" onClick=onProfileLinkClick disabled=isLoading}}}
                 {{{ControlledInput name="search" placeholder="Поиск" type="text" id="search" class="sidebar__search-input"}}}
                 <ul class="sidebar__chat-list">
                      {{#each chats}}
                      {{{Chat chat=this onClick=this.link currentUser=this.currentUser}}}
                      {{/each}}
                 </ul>
+                {{{Button type="button" text="создать чат" class="button"  onClick=onChatCreateLinkClick disabled=isLoading}}}
             </div>
             <div class="chat-container">
                 {{#if currentChat}}
