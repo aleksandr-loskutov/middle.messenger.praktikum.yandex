@@ -2,10 +2,17 @@
 
 ![Build status](https://github.com/aleksandr-loskutov/middle.messenger.praktikum.yandex/actions/workflows/docker-deploy.yml/badge.svg)
 
-Приложение веб-чат с возможностью регистрации и переписки (MVP).
-Доступно [по ссылке](https://messenger.aleksandrl.ru/).
+Приложение веб-чат с возможностью регистрации и переписки (MVP). Без использования фреймворков. Разработано на шаблонизаторе, ооп и сокетах. Вёрстка по макету с нуля. Реализована валидация форм, взаимодействие с сервером, обмен сообщениями, авторизация, регистрация, редактирование профиля, изменение аватара, создание и удаление чатов, добавление пользователей в чаты.
 
-Страницы:
+## Demo
+Доступно [по ссылке](https://messenger.aleksandrl.ru/sign-up).
+
+## Screenshot
+![App Screenshot](https://files.aleksandrl.ru/sites/portfolio/img/messenger.png)
+
+## Video
+[ Короткое видео с функционалом](https://www.berrycast.com/conversations/f93c3464-fca4-5ac6-b8e4-40fec9627002).
+## Страницы:
 
 - [Вход](https://messenger.aleksandrl.ru/)
 - [Регистрация](https://messenger.aleksandrl.ru/sign-up)
@@ -24,7 +31,7 @@
 
 ## Технологии
 - [TypeScript](https://www.typescriptlang.org/)
-- [Макет приложения](https://www.figma.com/file/jF5fFFzgGOxQeB4CmKWTiE/Chat_external_link?node-id=0%3A1) - от Яндекса;
+- [Макет приложения](https://www.figma.com/file/jF5fFFzgGOxQeB4CmKWTiE/Chat_external_link?node-id=0%3A1) - в стиле телеграм;
 - [Express](http://expressjs.com/) — веб-сервер;
 - [Handlebars](http://handlebarsjs.com/) — шаблонизатор;
 - [SASS](https://sass-lang.com/) — препроцессор;
