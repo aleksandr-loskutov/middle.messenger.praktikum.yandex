@@ -5,29 +5,10 @@
 Приложение веб-чат с возможностью регистрации и переписки (MVP). Без использования фреймворков. Разработано на шаблонизаторе, ооп и сокетах. Вёрстка по макету с нуля. Реализована валидация форм, взаимодействие с сервером, обмен сообщениями, авторизация, регистрация, редактирование профиля, изменение аватара, создание и удаление чатов, добавление пользователей в чаты.
 
 ## Demo
-Доступно [по ссылке](https://messenger.aleksandrl.ru/sign-up).
+Доступно [по ссылке](https://messenger.aleksandrl.ru/sign-up). Короткое [видео с функционалом](https://www.berrycast.com/conversations/f93c3464-fca4-5ac6-b8e4-40fec9627002).
 
 ## Screenshot
 ![App Screenshot](https://files.aleksandrl.ru/sites/portfolio/img/messenger.png)
-
-## Video
-[ Короткое видео с функционалом](https://www.berrycast.com/conversations/f93c3464-fca4-5ac6-b8e4-40fec9627002).
-## Страницы:
-
-- [Вход](https://messenger.aleksandrl.ru/)
-- [Регистрация](https://messenger.aleksandrl.ru/sign-up)
-- [Чат](https://messenger.aleksandrl.ru/messenger)
-- [Профиль](https://messenger.aleksandrl.ru/settings)
-- [404](https://messenger.aleksandrl.ru/404)
-
-## Установка
-
-- `npm install` — установка;
-- `npm start` — запуск версии для разработчика;
-- `npm run lint` — запуск линтера;
-- `npm run test` — запуск тестов;
-- `npm run build` — сборка статики в папку `dist`;
-- `npm run serve` — запуск сервера для раздачи статики из папки `dist`;
 
 ## Технологии
 - [TypeScript](https://www.typescriptlang.org/)
@@ -39,3 +20,19 @@
 - [Websockets](https://developer.mozilla.org/ru/docs/Web/API/WebSockets_API) — обмен сообщениями;
 - [Docker](https://www.docker.com/) + [github actions](https://github.com/features/actions) для автодеплоя на VDS;
 - EsLint, Stylelint, Prettier — линтеры.
+
+## Страницы:
+- [Вход](https://messenger.aleksandrl.ru/)
+- [Регистрация](https://messenger.aleksandrl.ru/sign-up)
+- [Чат](https://messenger.aleksandrl.ru/messenger)
+- [Профиль](https://messenger.aleksandrl.ru/settings)
+- [404](https://messenger.aleksandrl.ru/404)
+
+## Установка
+- `npm install` — установка;
+- `npm start` — запуск версии для разработчика;
+- `npm run lint` — запуск линтера;
+- `npm run test` — запуск тестов;
+- `npm run build` — сборка статики в папку `dist`;
+- `npm run serve` — запуск сервера для раздачи статики из папки `dist`;
+
