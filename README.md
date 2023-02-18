@@ -18,6 +18,7 @@
 - [SASS](https://sass-lang.com/) — препроцессор;
 - [Webpack](https://webpack.js.org/) — сборщик;
 - [Websockets](https://developer.mozilla.org/ru/docs/Web/API/WebSockets_API) — обмен сообщениями;
+- [Mocha & Chai](https://github.com/mochajs/mocha) — тестирование;
 - [Docker](https://www.docker.com/) + [github actions](https://github.com/features/actions) для автодеплоя на VDS;
 - EsLint, Stylelint, Prettier — линтеры.
 
